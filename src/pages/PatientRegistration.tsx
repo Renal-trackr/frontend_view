@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -27,21 +25,21 @@ import {
   Phone,
   MapPin,
   Mail,
-  FileText,
-  ClipboardList,
   ArrowLeft,
   ArrowRight,
   Check,
   Plus,
-  Stethoscope,
   AlertTriangle,
   Pill,
+  Loader2,
 } from "lucide-react";
 import { PatientStatus, MRCStage } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/components/ui/use-toast";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
+import PatientService from "@/services/PatientService";
+import AuthService from "@/services/AuthService";
 
 type StepProps = {
   onNext: () => void;
@@ -57,7 +55,7 @@ const PersonalInfoStep: React.FC<StepProps> = ({
   updateFormData 
 }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     updateFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -65,7 +63,7 @@ const PersonalInfoStep: React.FC<StepProps> = ({
   const handleSelectChange = (field: string, value: string) => {
     updateFormData({ ...formData, [field]: value });
   };
-
+  
   const validate = () => {
     const newErrors: Record<string, string> = {};
     
@@ -92,7 +90,7 @@ const PersonalInfoStep: React.FC<StepProps> = ({
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  
   const handleNext = () => {
     if (validate()) {
       onNext();
@@ -108,60 +106,59 @@ const PersonalInfoStep: React.FC<StepProps> = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="firstName">Prénom <span className="text-danger-500">*</span></Label>
+          <Label htmlFor="firstName">Prénom <span className="text-red-500">*</span></Label>
           <Input
             id="firstName"
             name="firstName"
             value={formData.firstName || ""}
             onChange={handleChange}
             placeholder="Prénom du patient"
-            className={errors.firstName ? "border-danger-500" : ""}
+            className={errors.firstName ? "border-red-500" : ""}
           />
-          {errors.firstName && <p className="text-xs text-danger-500">{errors.firstName}</p>}
+          {errors.firstName && <p className="text-xs text-red-500">{errors.firstName}</p>}
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="lastName">Nom <span className="text-danger-500">*</span></Label>
+          <Label htmlFor="lastName">Nom <span className="text-red-500">*</span></Label>
           <Input
             id="lastName"
             name="lastName"
             value={formData.lastName || ""}
             onChange={handleChange}
             placeholder="Nom du patient"
-            className={errors.lastName ? "border-danger-500" : ""}
+            className={errors.lastName ? "border-red-500" : ""}
           />
-          {errors.lastName && <p className="text-xs text-danger-500">{errors.lastName}</p>}
+          {errors.lastName && <p className="text-xs text-red-500">{errors.lastName}</p>}
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="dateOfBirth">Date de naissance <span className="text-danger-500">*</span></Label>
+          <Label htmlFor="dateOfBirth">Date de naissance <span className="text-red-500">*</span></Label>
           <Input
             id="dateOfBirth"
             name="dateOfBirth"
             type="date"
             value={formData.dateOfBirth || ""}
             onChange={handleChange}
-            className={errors.dateOfBirth ? "border-danger-500" : ""}
+            className={errors.dateOfBirth ? "border-red-500" : ""}
           />
-          {errors.dateOfBirth && <p className="text-xs text-danger-500">{errors.dateOfBirth}</p>}
+          {errors.dateOfBirth && <p className="text-xs text-red-500">{errors.dateOfBirth}</p>}
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="gender">Genre <span className="text-danger-500">*</span></Label>
+          <Label htmlFor="gender">Genre <span className="text-red-500">*</span></Label>
           <Select
             value={formData.gender || ""}
             onValueChange={(value) => handleSelectChange("gender", value)}
           >
-            <SelectTrigger id="gender" className={errors.gender ? "border-danger-500" : ""}>
+            <SelectTrigger id="gender" className={errors.gender ? "border-red-500" : ""}>
               <SelectValue placeholder="Sélectionner" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="male">Homme</SelectItem>
               <SelectItem value="female">Femme</SelectItem>
-              <SelectItem value="other">Autre</SelectItem>
             </SelectContent>
           </Select>
-          {errors.gender && <p className="text-xs text-danger-500">{errors.gender}</p>}
+          {errors.gender && <p className="text-xs text-red-500">{errors.gender}</p>}
         </div>
       </div>
       
@@ -182,16 +179,16 @@ const PersonalInfoStep: React.FC<StepProps> = ({
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Téléphone <span className="text-danger-500">*</span></Label>
+            <Label htmlFor="phoneNumber">Téléphone <span className="text-red-500">*</span></Label>
             <Input
               id="phoneNumber"
               name="phoneNumber"
               value={formData.phoneNumber || ""}
               onChange={handleChange}
               placeholder="Numéro de téléphone"
-              className={errors.phoneNumber ? "border-danger-500" : ""}
+              className={errors.phoneNumber ? "border-red-500" : ""}
             />
-            {errors.phoneNumber && <p className="text-xs text-danger-500">{errors.phoneNumber}</p>}
+            {errors.phoneNumber && <p className="text-xs text-red-500">{errors.phoneNumber}</p>}
           </div>
           
           <div className="space-y-2">
@@ -236,7 +233,7 @@ const MedicalInfoStep: React.FC<StepProps> = ({
   const handleSelectChange = (field: string, value: string) => {
     updateFormData({ ...formData, [field]: value });
   };
-
+  
   const addCondition = () => {
     if (newCondition.trim()) {
       const conditions = [...(formData.medicalConditions || []), newCondition];
@@ -244,13 +241,13 @@ const MedicalInfoStep: React.FC<StepProps> = ({
       setNewCondition("");
     }
   };
-
+  
   const removeCondition = (index: number) => {
     const conditions = [...(formData.medicalConditions || [])];
     conditions.splice(index, 1);
     updateFormData({ ...formData, medicalConditions: conditions });
   };
-
+  
   const addAllergy = () => {
     if (newAllergy.trim()) {
       const allergies = [...(formData.allergies || []), newAllergy];
@@ -258,13 +255,13 @@ const MedicalInfoStep: React.FC<StepProps> = ({
       setNewAllergy("");
     }
   };
-
+  
   const removeAllergy = (index: number) => {
     const allergies = [...(formData.allergies || [])];
     allergies.splice(index, 1);
     updateFormData({ ...formData, allergies });
   };
-
+  
   const addMedication = () => {
     if (newMedication.name.trim() && newMedication.dosage.trim() && newMedication.frequency.trim()) {
       const medications = [...(formData.medications || []), { ...newMedication }];
@@ -272,7 +269,7 @@ const MedicalInfoStep: React.FC<StepProps> = ({
       setNewMedication({ name: "", dosage: "", frequency: "" });
     }
   };
-
+  
   const removeMedication = (index: number) => {
     const medications = [...(formData.medications || [])];
     medications.splice(index, 1);
@@ -304,6 +301,29 @@ const MedicalInfoStep: React.FC<StepProps> = ({
                 <SelectItem value={MRCStage.STAGE_3B}>Stade 3B</SelectItem>
                 <SelectItem value={MRCStage.STAGE_4}>Stade 4</SelectItem>
                 <SelectItem value={MRCStage.STAGE_5}>Stade 5</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="bloodGroup">Groupe sanguin</Label>
+            <Select
+              value={formData.bloodGroup || ""}
+              onValueChange={(value) => handleSelectChange("bloodGroup", value)}
+            >
+              <SelectTrigger id="bloodGroup">
+                <SelectValue placeholder="Sélectionner un groupe" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="A+">A+</SelectItem>
+                <SelectItem value="A-">A-</SelectItem>
+                <SelectItem value="B+">B+</SelectItem>
+                <SelectItem value="B-">B-</SelectItem>
+                <SelectItem value="AB+">AB+</SelectItem>
+                <SelectItem value="AB-">AB-</SelectItem>
+                <SelectItem value="O+">O+</SelectItem>
+                <SelectItem value="O-">O-</SelectItem>
+                <SelectItem value="Unknown">Inconnu</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -344,9 +364,9 @@ const MedicalInfoStep: React.FC<StepProps> = ({
           
           <div className="space-y-2">
             {(formData.medicalConditions || []).map((condition: string, index: number) => (
-              <div key={index} className="flex justify-between items-center p-2 bg-secondary-50 rounded-md">
+              <div key={index} className="flex justify-between items-center p-2 bg-gray-100 rounded-md">
                 <div className="flex items-center">
-                  <Heart className="h-4 w-4 text-danger-500 mr-2" />
+                  <Heart className="h-4 w-4 text-red-500 mr-2" />
                   <span>{condition}</span>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => removeCondition(index)}>
@@ -376,9 +396,9 @@ const MedicalInfoStep: React.FC<StepProps> = ({
           
           <div className="space-y-2">
             {(formData.allergies || []).map((allergy: string, index: number) => (
-              <div key={index} className="flex justify-between items-center p-2 bg-secondary-50 rounded-md">
+              <div key={index} className="flex justify-between items-center p-2 bg-gray-100 rounded-md">
                 <div className="flex items-center">
-                  <AlertTriangle className="h-4 w-4 text-warning-500 mr-2" />
+                  <AlertTriangle className="h-4 w-4 text-amber-500 mr-2" />
                   <span>{allergy}</span>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => removeAllergy(index)}>
@@ -420,9 +440,9 @@ const MedicalInfoStep: React.FC<StepProps> = ({
           
           <div className="space-y-2">
             {(formData.medications || []).map((med: any, index: number) => (
-              <div key={index} className="flex justify-between items-center p-2 bg-secondary-50 rounded-md">
+              <div key={index} className="flex justify-between items-center p-2 bg-gray-100 rounded-md">
                 <div className="flex items-center">
-                  <Pill className="h-4 w-4 text-primary-500 mr-2" />
+                  <Pill className="h-4 w-4 text-blue-500 mr-2" />
                   <span>{med.name} - {med.dosage} - {med.frequency}</span>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => removeMedication(index)}>
@@ -516,16 +536,16 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="referringPhysician">Médecin référent <span className="text-danger-500">*</span></Label>
+            <Label htmlFor="referringPhysician">Médecin référent <span className="text-red-500">*</span></Label>
             <Input
               id="referringPhysician"
               name="referringPhysician"
               value={formData.referringPhysician || ""}
               onChange={handleChange}
               placeholder="Nom du médecin référent"
-              className={errors.referringPhysician ? "border-danger-500" : ""}
+              className={errors.referringPhysician ? "border-red-500" : ""}
             />
-            {errors.referringPhysician && <p className="text-xs text-danger-500">{errors.referringPhysician}</p>}
+            {errors.referringPhysician && <p className="text-xs text-red-500">{errors.referringPhysician}</p>}
           </div>
         </div>
         
@@ -612,18 +632,61 @@ const SummaryStep: React.FC<StepProps> = ({
   updateFormData 
 }) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
-  const handleSubmit = () => {
-    // Ici, vous devriez envoyer les données au serveur
-    console.log("Données du formulaire à soumettre:", formData);
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError(null);
     
-    // Simuler l'enregistrement et naviguer vers la liste des patients
-    toast({
-      title: "Patient enregistré avec succès",
-      description: `${formData.firstName} ${formData.lastName} a été ajouté à votre liste de patients.`,
-    });
-    
-    navigate("/patients");
+    try {
+      // Get the doctor info to use as reference
+      const doctorInfo = AuthService.getDoctorInfo();
+      if (!doctorInfo || !doctorInfo.doctor || !doctorInfo.doctor.id) {
+        throw new Error("Information du médecin non disponible");
+      }
+      
+      // Prepare the data for API
+      const patientData = {
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        birth_date: formData.dateOfBirth,
+        gender: formData.gender,
+        phoneNumber: formData.phoneNumber,
+        email: formData.email || "",
+        address: formData.address || "",
+        blood_group: formData.bloodGroup || "Unknown",
+        mrc_status: formData.mrcStage || "",
+        current_treatments: formData.medications?.map((med: any) => 
+          ({ name: med.name, dosage: med.dosage, frequency: med.frequency })
+        ) || [],
+        medical_history: formData.medicalConditions || [],
+        antecedents: formData.allergies || [],
+        doctor_ref: doctorInfo.doctor.id
+      };
+      
+      // Send data to the API
+      const newPatient = await PatientService.registerPatient(patientData);
+      
+      toast({
+        title: "Patient enregistré avec succès",
+        description: `${formData.firstName} ${formData.lastName} a été ajouté à votre liste de patients.`,
+      });
+      
+      navigate("/dashboard/patients");
+    } catch (error: any) {
+      console.error("Error registering patient:", error);
+      setSubmitError(error.message || "Une erreur est survenue lors de l'enregistrement du patient");
+      
+      toast({
+        title: "Erreur",
+        description: error.message || "Une erreur est survenue lors de l'enregistrement du patient",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -632,6 +695,14 @@ const SummaryStep: React.FC<StepProps> = ({
         <h2 className="text-xl font-semibold">Résumé et confirmation</h2>
         <p className="text-sm text-gray-500">Vérifiez les informations du patient avant l'enregistrement</p>
       </div>
+      
+      {submitError && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Erreur</AlertTitle>
+          <AlertDescription>{submitError}</AlertDescription>
+        </Alert>
+      )}
       
       <div className="space-y-6">
         <Card>
@@ -654,7 +725,7 @@ const SummaryStep: React.FC<StepProps> = ({
               </div>
               <div>
                 <p className="text-sm font-medium">Genre</p>
-                <p className="text-sm">{formData.gender === "male" ? "Homme" : formData.gender === "female" ? "Femme" : "Autre"}</p>
+                <p className="text-sm">{formData.gender === "male" ? "Homme" : formData.gender === "female" ? "Femme" : "Genre invalide"}</p>
               </div>
               <div className="col-span-2">
                 <p className="text-sm font-medium">Adresse</p>
@@ -694,6 +765,12 @@ const SummaryStep: React.FC<StepProps> = ({
                   ) : "Non renseigné"}
                 </p>
               </div>
+              
+              <div>
+                <p className="text-sm font-medium">Groupe sanguin</p>
+                <p className="text-sm">{formData.bloodGroup || "Non renseigné"}</p>
+              </div>
+              
               <div>
                 <p className="text-sm font-medium">Statut</p>
                 <p className="text-sm">
@@ -782,11 +859,11 @@ const SummaryStep: React.FC<StepProps> = ({
               <p className="text-sm font-medium">Consentements</p>
               <div className="space-y-1 mt-1">
                 <div className="flex items-center">
-                  <Check className={`h-4 w-4 mr-2 ${formData.consentTreatment ? "text-success-500" : "text-gray-300"}`} />
+                  <Check className={`h-4 w-4 mr-2 ${formData.consentTreatment ? "text-green-500" : "text-gray-300"}`} />
                   <p className="text-sm">Consentement au traitement</p>
                 </div>
                 <div className="flex items-center">
-                  <Check className={`h-4 w-4 mr-2 ${formData.consentDataSharing ? "text-success-500" : "text-gray-300"}`} />
+                  <Check className={`h-4 w-4 mr-2 ${formData.consentDataSharing ? "text-green-500" : "text-gray-300"}`} />
                   <p className="text-sm">Partage des données médicales</p>
                 </div>
               </div>
@@ -805,9 +882,18 @@ const SummaryStep: React.FC<StepProps> = ({
           <ArrowLeft className="mr-2 h-4 w-4" />
           Précédent
         </Button>
-        <Button onClick={handleSubmit}>
-          Enregistrer le patient
-          <Check className="ml-2 h-4 w-4" />
+        <Button onClick={handleSubmit} disabled={submitting}>
+          {submitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Enregistrement...
+            </>
+          ) : (
+            <>
+              Enregistrer le patient
+              <Check className="ml-2 h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
     </div>
@@ -897,12 +983,12 @@ const PatientRegistration = () => {
           <div className="flex items-center space-x-1">
             {steps.map((step, index) => (
               <React.Fragment key={index}>
-                <div 
+                <div
                   className={`py-1 px-3 rounded-full text-sm ${
                     currentStep === index + 1 
-                      ? "bg-primary-500 text-white" 
+                      ? "bg-blue-100 text-blue-700" 
                       : currentStep > index + 1 
-                      ? "bg-primary-100 text-primary-700" 
+                      ? "bg-blue-500 text-white" 
                       : "bg-gray-100 text-gray-500"
                   }`}
                 >

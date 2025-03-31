@@ -13,13 +13,13 @@ import PatientRegistration from "./pages/PatientRegistration";
 import AppointmentsPage from "./pages/AppointmentsPage";
 import WorkflowsPage from "./pages/WorkflowsPage";
 import SettingsPage from "./pages/SettingsPage";
-// Nouvelles importations
 import AdminLogin from "./pages/auth/AdminLogin";
 import DoctorLogin from "./pages/auth/DoctorLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import DoctorManagement from "./pages/admin/DoctorManagement";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
+import RootRedirect from "./components/RootRedirect";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +33,9 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Root redirect handler */}
+            <Route path="/" element={<RootRedirect />} />
+            
             {/* Routes d'authentification */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/login" element={<DoctorLogin />} />
@@ -44,7 +47,7 @@ const App = () => {
             </Route>
             
             {/* Routes principales (protégées) */}
-            <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            <Route path="/dashboard" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route index element={<Dashboard />} />
               <Route path="patients" element={<PatientsList />} />
               <Route path="patients/new" element={<PatientRegistration />} />
@@ -52,10 +55,18 @@ const App = () => {
               <Route path="appointments" element={<AppointmentsPage />} />
               <Route path="workflows" element={<WorkflowsPage />} />
               <Route path="settings" element={<SettingsPage />} />
-              {/* Catch-all redirect to 404 */}
-              <Route path="*" element={<Navigate to="/not-found" replace />} />
             </Route>
+            
+            {/* For backward compatibility */}
+            <Route path="/patients" element={<Navigate to="/dashboard/patients" replace />} />
+            <Route path="/patients/new" element={<Navigate to="/dashboard/patients/new" replace />} />
+            <Route path="/patients/:id" element={<Navigate to="/dashboard/patients/:id" replace />} />
+            <Route path="/appointments" element={<Navigate to="/dashboard/appointments" replace />} />
+            <Route path="/workflows" element={<Navigate to="/dashboard/workflows" replace />} />
+            <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
+            
             <Route path="/not-found" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/not-found" replace />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

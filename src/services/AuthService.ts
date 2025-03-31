@@ -10,28 +10,21 @@ interface LoginCredentials {
 interface AuthResponse {
   success: boolean;
   message: string;
-  data?: {
-    userId: string;
-    role: string;
-    firstname: string;
-    lastName: string;
-    token: string;
-    expiresAt: string;
-  };
+  data?: any;
 }
 
 class AuthService {
   /**
-   * Login user
+   * Login admin user
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, credentials);
       
       if (response.data.success && response.data.data?.token) {
-        this.setToken(response.data.data.token);
-        this.setTokenExpiry(response.data.data.expiresAt);
-        this.setUserInfo(response.data.data);
+        this.setAdminToken(response.data.data.token);
+        this.setAdminTokenExpiry(response.data.data.expiresAt);
+        this.setAdminUserInfo(response.data.data);
       }
       
       return response.data;
@@ -44,11 +37,33 @@ class AuthService {
   }
 
   /**
-   * Logout user
+   * Login doctor user
    */
-  async logout(): Promise<boolean> {
+  async doctorLogin(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const token = this.getToken();
+      const response = await axios.post(`${API_URL}/api/auth/doctor/login`, credentials);
+      
+      if (response.data.success && response.data.data?.token) {
+        this.setDoctorToken(response.data.data.token);
+        this.setDoctorTokenExpiry(response.data.data.expiresAt);
+        this.setDoctorUserInfo(response.data.data);
+      }
+      
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Une erreur est survenue lors de la connexion'
+      };
+    }
+  }
+
+  /**
+   * Logout admin user
+   */
+  async logoutAdmin(): Promise<boolean> {
+    try {
+      const token = this.getAdminToken();
       
       if (!token) {
         return false;
@@ -61,21 +76,62 @@ class AuthService {
       );
       
       if (response.data.success) {
-        this.clearAuthData();
+        this.clearAdminAuthData();
       }
       
       return response.data.success;
     } catch (error) {
-      return false;
+      this.clearAdminAuthData(); // Nettoyage en cas d'erreur
+      return true;
     }
   }
 
   /**
-   * Refresh token
+   * Logout doctor user
    */
-  async refreshToken(): Promise<boolean> {
+  async logoutDoctor(): Promise<boolean> {
     try {
-      const token = this.getToken();
+      const token = this.getDoctorToken();
+      
+      if (!token) {
+        return true; // Already logged out
+      }
+      
+      const response = await axios.post(
+        `${API_URL}/api/auth/logout`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (response.data.success) {
+        this.clearDoctorAuthData();
+      }
+      
+      return response.data.success;
+    } catch (error) {
+      this.clearDoctorAuthData(); // Clean up anyway
+      return true;
+    }
+  }
+
+  /**
+   * General logout based on current role
+   */
+  async logout(): Promise<boolean> {
+    if (this.isAuthenticatedAdmin()) {
+      return await this.logoutAdmin();
+    } else if (this.isAuthenticatedDoctor()) {
+      return await this.logoutDoctor();
+    }
+    return false;
+  }
+
+  /**
+   * Refresh admin token
+   */
+  async refreshAdminToken(): Promise<boolean> {
+    try {
+      const token = this.getAdminToken();
       
       if (!token) {
         return false;
@@ -88,8 +144,8 @@ class AuthService {
       );
       
       if (response.data.success && response.data.data?.token) {
-        this.setToken(response.data.data.token);
-        this.setTokenExpiry(response.data.data.expiresAt);
+        this.setAdminToken(response.data.data.token);
+        this.setAdminTokenExpiry(response.data.data.expiresAt);
         return true;
       }
       
@@ -100,11 +156,11 @@ class AuthService {
   }
 
   /**
-   * Check if user is authenticated
+   * Check if admin is authenticated
    */
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    const expiryString = this.getTokenExpiry();
+  isAuthenticatedAdmin(): boolean {
+    const token = this.getAdminToken();
+    const expiryString = this.getAdminTokenExpiry();
     
     if (!token || !expiryString) {
       return false;
@@ -114,46 +170,78 @@ class AuthService {
     const expiry = new Date(expiryString);
     const now = new Date();
     
-    if (now > expiry) {
-      // Token expired, try to refresh
-      return false;
-    }
-    
-    return true;
+    return now < expiry;
   }
 
   /**
-   * Get current token
+   * Check if doctor is authenticated
    */
-  getToken(): string | null {
+  isAuthenticatedDoctor(): boolean {
+    const token = this.getDoctorToken();
+    const expiryString = this.getDoctorTokenExpiry();
+    
+    if (!token || !expiryString) {
+      return false;
+    }
+    
+    // Check if token is expired
+    const expiry = new Date(expiryString);
+    const now = new Date();
+    
+    return now < expiry;
+  }
+  
+  /**
+   * Check if any user is authenticated
+   */
+  isAnyUserAuthenticated(): boolean {
+    return this.isAuthenticatedAdmin() || this.isAuthenticatedDoctor();
+  }
+  
+  /**
+   * Get the role of the current authenticated user
+   */
+  getUserRole(): 'ADMIN' | 'DOCTOR' | null {
+    if (this.isAuthenticatedAdmin()) {
+      return 'ADMIN';
+    } else if (this.isAuthenticatedDoctor()) {
+      return 'DOCTOR';
+    }
+    return null;
+  }
+
+  /**
+   * Get admin token
+   */
+  getAdminToken(): string | null {
     return localStorage.getItem('admin_token');
   }
 
   /**
-   * Set token in storage
+   * Set admin token in storage
    */
-  private setToken(token: string): void {
+  private setAdminToken(token: string): void {
     localStorage.setItem('admin_token', token);
   }
 
   /**
-   * Get token expiry
+   * Get admin token expiry
    */
-  private getTokenExpiry(): string | null {
+  private getAdminTokenExpiry(): string | null {
     return localStorage.getItem('token_expiry');
   }
 
   /**
-   * Set token expiry in storage
+   * Set admin token expiry in storage
    */
-  private setTokenExpiry(expiry: string): void {
+  private setAdminTokenExpiry(expiry: string): void {
     localStorage.setItem('token_expiry', expiry);
   }
 
   /**
-   * Store user info in local storage
+   * Store admin user info in local storage
    */
-  private setUserInfo(userData: any): void {
+  private setAdminUserInfo(userData: any): void {
     localStorage.setItem('admin_user', JSON.stringify({
       id: userData.userId,
       role: userData.role,
@@ -163,12 +251,77 @@ class AuthService {
   }
 
   /**
-   * Clear all auth data from storage
+   * Clear all admin auth data from storage
    */
-  private clearAuthData(): void {
+  private clearAdminAuthData(): void {
     localStorage.removeItem('admin_token');
     localStorage.removeItem('token_expiry');
     localStorage.removeItem('admin_user');
+  }
+
+  /**
+   * Get doctor token
+   */
+  getDoctorToken(): string | null {
+    return localStorage.getItem('doctor_token');
+  }
+  
+  /**
+   * Set doctor token in storage
+   */
+  private setDoctorToken(token: string): void {
+    localStorage.setItem('doctor_token', token);
+  }
+  
+  /**
+   * Get doctor token expiry
+   */
+  private getDoctorTokenExpiry(): string | null {
+    return localStorage.getItem('doctor_token_expiry');
+  }
+  
+  /**
+   * Set doctor token expiry in storage
+   */
+  private setDoctorTokenExpiry(expiry: string): void {
+    localStorage.setItem('doctor_token_expiry', expiry);
+  }
+  
+  /**
+   * Store doctor info in local storage
+   */
+  private setDoctorUserInfo(userData: any): void {
+    localStorage.setItem('doctor_user', JSON.stringify({
+      id: userData.userId,
+      role: userData.role,
+      doctor: userData.doctor
+    }));
+  }
+  
+  /**
+   * Clear all doctor auth data from storage
+   */
+  private clearDoctorAuthData(): void {
+    localStorage.removeItem('doctor_token');
+    localStorage.removeItem('doctor_token_expiry');
+    localStorage.removeItem('doctor_user');
+  }
+  
+  /**
+   * Get doctor info from storage
+   */
+  getDoctorInfo() {
+    const doctorUser = localStorage.getItem('doctor_user');
+    if (!doctorUser) {
+      return null;
+    }
+    
+    try {
+      return JSON.parse(doctorUser);
+    } catch (error) {
+      console.error("Error parsing doctor user data:", error);
+      return null;
+    }
   }
 }
 

@@ -1,5 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode, useEffect, useState } from "react";
+import AuthService from "@/services/AuthService";
+import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -10,11 +12,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Vérifiez si l'utilisateur est connecté en vérifiant l'existence d'un token 
-    // ou d'une autre façon selon votre logique d'authentification
+    // Version simplifiée sans appel API
     const checkAuth = () => {
-      const token = localStorage.getItem("doctor_token");
-      setIsAuthenticated(!!token);
+      setIsAuthenticated(AuthService.isAuthenticatedDoctor());
       setIsLoading(false);
     };
 
@@ -22,7 +22,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, []);
 
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <p className="ml-2 text-lg">Vérification de l'authentification...</p>
+      </div>
+    );
   }
 
   return isAuthenticated ? (

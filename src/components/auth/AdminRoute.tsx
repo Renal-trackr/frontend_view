@@ -9,23 +9,16 @@ interface AdminRouteProps {
 
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAdminAuth = async () => {
-      // Check if token exists and is valid
-      if (AuthService.isAuthenticated()) {
-        setIsAdmin(true);
-      } else {
-        // Token is expired, try to refresh
-        const refreshed = await AuthService.refreshToken();
-        setIsAdmin(refreshed);
-      }
-      
+    // Version simplifiée sans appel API
+    const checkAuth = () => {
+      setIsAuthenticated(AuthService.isAuthenticatedAdmin());
       setIsLoading(false);
     };
 
-    checkAdminAuth();
+    checkAuth();
   }, []);
 
   if (isLoading) {
@@ -37,7 +30,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     );
   }
 
-  return isAdmin ? (
+  return isAuthenticated ? (
     <>{children}</>
   ) : (
     <Navigate to="/admin/login" replace />

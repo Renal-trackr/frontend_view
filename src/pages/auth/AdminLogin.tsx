@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,13 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Vérifier si déjà connecté
+  useEffect(() => {
+    if (AuthService.isAuthenticatedAdmin()) {
+      navigate("/admin");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,17 +40,21 @@ const AdminLogin = () => {
       const response = await AuthService.login({ email, password });
       
       if (response.success) {
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue dans l'interface d'administration",
-        });
-        navigate("/admin");
+        // Brève pause pour s'assurer que le token est bien stocké
+        setTimeout(() => {
+          toast({
+            title: "Connexion réussie",
+            description: "Bienvenue dans l'interface d'administration",
+          });
+          navigate("/admin");
+        }, 100);
       } else {
         toast({
           title: "Échec de connexion",
           description: response.message,
           variant: "destructive",
         });
+        setLoading(false);
       }
     } catch (error) {
       toast({
@@ -51,7 +62,6 @@ const AdminLogin = () => {
         description: "Une erreur est survenue lors de la connexion",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };
