@@ -36,7 +36,9 @@ import {
   Microscope,
   Loader2,
   Check,
-  Clock
+  Clock,
+  Edit,
+  Trash2
 } from "lucide-react";
 import { 
   LineChart, 
@@ -64,6 +66,10 @@ import {
 import AppointmentForm from "@/components/appointment/AppointmentForm";
 import { useToast } from "@/components/ui/use-toast";
 import PatientService from "@/services/PatientService";
+import MedicalHistoryForm from "@/components/patient/MedicalHistoryForm";
+import AntecedentForm from "@/components/patient/AntecedentForm";
+import WorkflowService, { Workflow, WorkflowStatus } from "@/services/WorkflowService";
+import WorkflowList from "@/components/workflow/WorkflowList";
 
 // Niveaux de DFG et leurs significations
 const gfrLevels = [
@@ -91,6 +97,16 @@ const PatientDetail = () => {
     patientId: id || "",
   });
 
+  const [medicalHistory, setMedicalHistory] = useState([]);
+  const [antecedents, setAntecedents] = useState([]);
+  const [showMedicalHistoryForm, setShowMedicalHistoryForm] = useState(false);
+  const [showAntecedentForm, setShowAntecedentForm] = useState(false);
+  const [editingMedicalItem, setEditingMedicalItem] = useState(null);
+  const [editingAntecedent, setEditingAntecedent] = useState(null);
+
+  const [workflows, setWorkflows] = useState<Workflow[]>([]);
+  const [workflowsLoading, setWorkflowsLoading] = useState(false);
+
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
@@ -111,6 +127,8 @@ const PatientDetail = () => {
         }
         
         setPatient(patientData);
+        setMedicalHistory(patientData.medical_history || []);
+        setAntecedents(patientData.antecedents || []);
         
         // Dans une application réelle, d'autres appels API seraient faits ici
         // pour récupérer l'historique des analyses, les résultats récents, etc.
@@ -138,6 +156,31 @@ const PatientDetail = () => {
     fetchPatientData();
   }, [id, navigate, toast]);
 
+  useEffect(() => {
+    const fetchWorkflows = async () => {
+      if (!id) return;
+      
+      try {
+        setWorkflowsLoading(true);
+        const workflowsData = await WorkflowService.getWorkflowsByPatient(id);
+        setWorkflows(workflowsData);
+      } catch (error) {
+        console.error("Error fetching workflows:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de récupérer les workflows du patient",
+          variant: "destructive"
+        });
+      } finally {
+        setWorkflowsLoading(false);
+      }
+    };
+    
+    if (patient) {
+      fetchWorkflows();
+    }
+  }, [id, patient]);
+
   const handleAppointmentSubmit = (appointmentData) => {
     // Logique pour enregistrer le RDV à implémenter avec l'API
     console.log("Nouveau rendez-vous créé:", appointmentData);
@@ -148,6 +191,171 @@ const PatientDetail = () => {
     });
     
     setShowAppointmentDialog(false);
+  };
+
+  // Handle medical history operations
+  const handleAddMedicalHistory = async (historyItem) => {
+    try {
+      const result = await PatientService.addMedicalHistory(id, historyItem);
+      
+      // Update the medical history state
+      setMedicalHistory(result.medical_history || []);
+      
+      toast({
+        title: "Succès",
+        description: "Élément ajouté à l'historique médical",
+      });
+      
+      setShowMedicalHistoryForm(false);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Échec de l'ajout à l'historique médical",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleUpdateMedicalHistory = async (historyItem) => {
+    try {
+      if (!editingMedicalItem || !editingMedicalItem.id) return;
+      
+      const result = await PatientService.updateMedicalHistoryItem(
+        id, 
+        editingMedicalItem.id, 
+        historyItem
+      );
+      
+      // Update the medical history state
+      setMedicalHistory(result.medical_history || []);
+      
+      toast({
+        title: "Succès",
+        description: "Historique médical mis à jour",
+      });
+      
+      setEditingMedicalItem(null);
+      setShowMedicalHistoryForm(false);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Échec de la mise à jour de l'historique médical",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteMedicalHistory = async (historyId) => {
+    try {
+      const result = await PatientService.deleteMedicalHistoryItem(id, historyId);
+      
+      // Update the medical history state
+      setMedicalHistory(result.medical_history || []);
+      
+      toast({
+        title: "Succès",
+        description: "Élément supprimé de l'historique médical",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Échec de la suppression de l'élément",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Handle antecedent operations
+  const handleAddAntecedent = async (antecedent) => {
+    try {
+      const result = await PatientService.addAntecedent(id, antecedent);
+      
+      // Update the antecedents state
+      setAntecedents(result.antecedents || []);
+      
+      toast({
+        title: "Succès",
+        description: "Antécédent ajouté avec succès",
+      });
+      
+      setShowAntecedentForm(false);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Échec de l'ajout de l'antécédent",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleUpdateAntecedent = async (antecedent) => {
+    try {
+      if (!editingAntecedent || !editingAntecedent.id) return;
+      
+      const result = await PatientService.updateAntecedentItem(
+        id, 
+        editingAntecedent.id, 
+        antecedent
+      );
+      
+      // Update the antecedents state
+      setAntecedents(result.antecedents || []);
+      
+      toast({
+        title: "Succès",
+        description: "Antécédent mis à jour",
+      });
+      
+      setEditingAntecedent(null);
+      setShowAntecedentForm(false);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Échec de la mise à jour de l'antécédent",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteAntecedent = async (antecedentId) => {
+    try {
+      const result = await PatientService.deleteAntecedentItem(id, antecedentId);
+      
+      // Update the antecedents state
+      setAntecedents(result.antecedents || []);
+      
+      toast({
+        title: "Succès",
+        description: "Antécédent supprimé",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error.message || "Échec de la suppression de l'antécédent",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Common functions
+  const startEditingMedicalHistory = (item) => {
+    setEditingMedicalItem(item);
+    setShowMedicalHistoryForm(true);
+  };
+
+  const startEditingAntecedent = (item) => {
+    setEditingAntecedent(item);
+    setShowAntecedentForm(true);
+  };
+
+  const cancelMedicalHistoryForm = () => {
+    setEditingMedicalItem(null);
+    setShowMedicalHistoryForm(false);
+  };
+
+  const cancelAntecedentForm = () => {
+    setEditingAntecedent(null);
+    setShowAntecedentForm(false);
   };
 
   if (error) {
@@ -203,6 +411,145 @@ const PatientDetail = () => {
       return dateString; // Retourne la chaîne telle quelle en cas d'erreur
     }
   };
+
+  const renderHistoryTab = () => (
+    <TabsContent value="history" className="mt-6">
+      <div className="grid grid-cols-1 gap-6">
+        {/* Medical History Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle>Affections chroniques</CardTitle>
+              <Button 
+                size="sm" 
+                onClick={() => {
+                  setEditingMedicalItem(null);
+                  setShowMedicalHistoryForm(true);
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Ajouter
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {showMedicalHistoryForm ? (
+              <MedicalHistoryForm
+                initialData={editingMedicalItem || { name: "", date: "", description: "" }}
+                onSubmit={editingMedicalItem ? handleUpdateMedicalHistory : handleAddMedicalHistory}
+                onCancel={cancelMedicalHistoryForm}
+                isEditing={!!editingMedicalItem}
+              />
+            ) : medicalHistory.length === 0 ? (
+              <p className="text-gray-500">Aucune affection chronique enregistrée</p>
+            ) : (
+              <div className="space-y-4">
+                {medicalHistory.map((item) => (
+                  <div key={item.id} className="flex items-start justify-between p-3 border rounded-md">
+                    <div>
+                      <h4 className="font-medium">{item.name}</h4>
+                      {item.date && (
+                        <p className="text-sm text-gray-500">
+                          Diagnostiqué le: {new Date(item.date).toLocaleDateString('fr-FR')}
+                        </p>
+                      )}
+                      {item.description && (
+                        <p className="text-sm mt-1">{item.description}</p>
+                      )}
+                    </div>
+                    <div className="flex space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => startEditingMedicalHistory(item)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleDeleteMedicalHistory(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Antecedents/Allergies Section */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle>Allergies</CardTitle>
+              <Button 
+                size="sm" 
+                onClick={() => {
+                  setEditingAntecedent(null);
+                  setShowAntecedentForm(true);
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Ajouter
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {showAntecedentForm ? (
+              <AntecedentForm
+                initialData={editingAntecedent || { name: "", date: "", description: "" }}
+                onSubmit={editingAntecedent ? handleUpdateAntecedent : handleAddAntecedent}
+                onCancel={cancelAntecedentForm}
+                isEditing={!!editingAntecedent}
+              />
+            ) : antecedents.length === 0 ? (
+              <p className="text-gray-500">Aucune allergie connue</p>
+            ) : (
+              <div className="space-y-4">
+                {antecedents.map((item) => (
+                  <div key={item.id} className="flex items-start justify-between p-3 border rounded-md bg-red-50">
+                    <div>
+                      <div className="flex items-center">
+                        <AlertTriangle className="h-4 w-4 text-red-500 mr-2" />
+                        <h4 className="font-medium">{item.name}</h4>
+                      </div>
+                      {item.date && (
+                        <p className="text-sm text-gray-500">
+                          Découvert le: {new Date(item.date).toLocaleDateString('fr-FR')}
+                        </p>
+                      )}
+                      {item.description && (
+                        <p className="text-sm mt-1">{item.description}</p>
+                      )}
+                    </div>
+                    <div className="flex space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => startEditingAntecedent(item)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleDeleteAntecedent(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </TabsContent>
+  );
 
   return (
     <div className="space-y-6">
@@ -407,27 +754,10 @@ const PatientDetail = () => {
           </Card>
         </TabsContent>
         
-        {/* Contenu des autres onglets (history, treatment, workflows, notes) */}
-        <TabsContent value="history" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Historique médical</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-medium mb-2">Affections chroniques</h3>
-                  <p className="text-gray-500">Aucune affection chronique enregistrée</p>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Allergies</h3>
-                  <p className="text-gray-500">Aucune allergie connue</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {/* History tab - replace with the new implementation */}
+        {renderHistoryTab()}
         
+        {/* Contenu des autres onglets (treatment, workflows, notes) */}
         <TabsContent value="treatment" className="mt-6">
           <Card>
             <CardHeader>

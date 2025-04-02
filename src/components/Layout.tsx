@@ -11,12 +11,23 @@ import {
 } from "lucide-react";
 import AuthService from "@/services/AuthService";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [doctorInfo, setDoctorInfo] = useState<any>(null);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   useEffect(() => {
     const info = AuthService.getDoctorInfo();
@@ -25,7 +36,11 @@ const Layout = () => {
     }
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => {
+    setShowLogoutDialog(true);
+  };
+
+  const handleConfirmLogout = async () => {
     const success = await AuthService.logoutDoctor();
     
     if (success) {
@@ -143,7 +158,7 @@ const Layout = () => {
               <Button 
                 variant="ghost" 
                 className="w-full justify-start text-gray-700 hover:bg-gray-100 hover:text-gray-900 p-2"
-                onClick={handleLogout}
+                onClick={handleLogoutClick}
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Déconnexion
@@ -181,6 +196,22 @@ const Layout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Logout confirmation dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmation de déconnexion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir vous déconnecter ?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmLogout}>Déconnexion</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

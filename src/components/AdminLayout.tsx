@@ -1,16 +1,27 @@
 import { Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, LayoutDashboard, UserPlus, LogOut, Settings } from "lucide-react";
+import { ChevronDown, LayoutDashboard, UserPlus, LogOut, Settings, ActivityIcon } from "lucide-react";
 import AuthService from "@/services/AuthService";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userInfo, setUserInfo] = useState({ firstname: "", lastName: "" });
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   
   useEffect(() => {
     // Get user info from local storage
@@ -28,7 +39,11 @@ const AdminLayout = () => {
     }
   }, []);
   
-  const handleLogout = async () => {
+  const handleLogoutClick = () => {
+    setShowLogoutDialog(true);
+  };
+
+  const handleConfirmLogout = async () => {
     const success = await AuthService.logout();
     
     if (success) {
@@ -103,11 +118,24 @@ const AdminLayout = () => {
                 Gestion des médecins
               </Link>
             </li>
+            <li>
+              <Link 
+                to="/admin/activity" 
+                className={`flex items-center p-2 rounded-md ${
+                  isActive("/admin/activity") 
+                    ? "bg-blue-50 text-blue-700" 
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <ActivityIcon className="h-4 w-4 mr-2" />
+                Historique d'activité
+              </Link>
+            </li>
             <li className="pt-4 border-t mt-4">
               <Button 
                 variant="ghost" 
                 className="w-full justify-start text-gray-700 hover:bg-gray-100 hover:text-gray-900 p-2"
-                onClick={handleLogout}
+                onClick={handleLogoutClick}
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Déconnexion
@@ -124,6 +152,7 @@ const AdminLayout = () => {
           <h1 className="text-xl font-semibold text-gray-800">
             {location.pathname === "/admin" && "Tableau de bord"}
             {location.pathname === "/admin/doctors" && "Gestion des médecins"}
+            {location.pathname === "/admin/activity" && "Historique d'activité"}
           </h1>
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
@@ -140,6 +169,22 @@ const AdminLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Logout confirmation dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmation de déconnexion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir vous déconnecter ?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmLogout}>Déconnexion</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

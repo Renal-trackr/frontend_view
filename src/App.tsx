@@ -17,6 +17,7 @@ import AdminLogin from "./pages/auth/AdminLogin";
 import DoctorLogin from "./pages/auth/DoctorLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import DoctorManagement from "./pages/admin/DoctorManagement";
+import ActionHistoryPage from "./pages/admin/ActionHistoryPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import RootRedirect from "./components/RootRedirect";
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="doctors" element={<DoctorManagement />} />
+              <Route path="activity" element={<ActionHistoryPage />} />
             </Route>
             
             {/* Routes principales (protégées) */}
