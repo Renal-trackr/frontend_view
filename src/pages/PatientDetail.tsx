@@ -71,7 +71,7 @@ import AntecedentForm from "@/components/patient/AntecedentForm";
 import WorkflowService, { Workflow, WorkflowStatus } from "@/services/WorkflowService";
 import WorkflowList from "@/components/workflow/WorkflowList";
 
-// Niveaux de DFG et leurs significations
+
 const gfrLevels = [
   { stage: "1", min: 90, max: 120, color: "#4ade80", label: "Normale ou élevée" },
   { stage: "2", min: 60, max: 89, color: "#a3e635", label: "Légèrement diminuée" },
@@ -118,7 +118,7 @@ const PatientDetail = () => {
           return;
         }
         
-        // Appel API pour récupérer les données du patient
+
         const patientData = await PatientService.getPatientById(id);
         
         if (!patientData) {
@@ -130,10 +130,7 @@ const PatientDetail = () => {
         setMedicalHistory(patientData.medical_history || []);
         setAntecedents(patientData.antecedents || []);
         
-        // Dans une application réelle, d'autres appels API seraient faits ici
-        // pour récupérer l'historique des analyses, les résultats récents, etc.
-        
-        // Pour l'instant, utilisons des données vides ou minimales pour ces éléments
+
         setChartData([]);
         setLatestResults(null);
         
@@ -146,7 +143,7 @@ const PatientDetail = () => {
           variant: "destructive"
         });
         
-        // Redirection vers la liste après délai en cas d'erreur
+
         setTimeout(() => navigate('/dashboard/patients'), 2000);
       } finally {
         setLoading(false);
@@ -182,7 +179,7 @@ const PatientDetail = () => {
   }, [id, patient]);
 
   const handleAppointmentSubmit = (appointmentData) => {
-    // Logique pour enregistrer le RDV à implémenter avec l'API
+
     console.log("Nouveau rendez-vous créé:", appointmentData);
     
     toast({
@@ -193,12 +190,11 @@ const PatientDetail = () => {
     setShowAppointmentDialog(false);
   };
 
-  // Handle medical history operations
   const handleAddMedicalHistory = async (historyItem) => {
     try {
       const result = await PatientService.addMedicalHistory(id, historyItem);
       
-      // Update the medical history state
+
       setMedicalHistory(result.medical_history || []);
       
       toast({
@@ -226,7 +222,7 @@ const PatientDetail = () => {
         historyItem
       );
       
-      // Update the medical history state
+
       setMedicalHistory(result.medical_history || []);
       
       toast({
@@ -249,7 +245,7 @@ const PatientDetail = () => {
     try {
       const result = await PatientService.deleteMedicalHistoryItem(id, historyId);
       
-      // Update the medical history state
+
       setMedicalHistory(result.medical_history || []);
       
       toast({
@@ -265,7 +261,7 @@ const PatientDetail = () => {
     }
   };
 
-  // Handle antecedent operations
+
   const handleAddAntecedent = async (antecedent) => {
     try {
       const result = await PatientService.addAntecedent(id, antecedent);
@@ -372,10 +368,10 @@ const PatientDetail = () => {
 
   if (loading || !patient) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
+      <div className="flex items-center justify-center h-screen bg-[#FAFAFA]">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-500 mx-auto mb-4" />
-          <p>Chargement des données patient...</p>
+          <Loader2 className="h-12 w-12 animate-spin text-[#2980BA] mx-auto mb-4" />
+          <p className="text-[#334349]">Chargement des données patient...</p>
         </div>
       </div>
     );
@@ -416,16 +412,17 @@ const PatientDetail = () => {
     <TabsContent value="history" className="mt-6">
       <div className="grid grid-cols-1 gap-6">
         {/* Medical History Section */}
-        <Card>
+        <Card className="shadow-md">
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>Affections chroniques</CardTitle>
+              <CardTitle className="text-[#2980BA]">Affections chroniques</CardTitle>
               <Button 
                 size="sm" 
                 onClick={() => {
                   setEditingMedicalItem(null);
                   setShowMedicalHistoryForm(true);
                 }}
+                className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Ajouter
@@ -441,20 +438,20 @@ const PatientDetail = () => {
                 isEditing={!!editingMedicalItem}
               />
             ) : medicalHistory.length === 0 ? (
-              <p className="text-gray-500">Aucune affection chronique enregistrée</p>
+              <p className="text-[#334349]">Aucune affection chronique enregistrée</p>
             ) : (
               <div className="space-y-4">
                 {medicalHistory.map((item) => (
-                  <div key={item.id} className="flex items-start justify-between p-3 border rounded-md">
+                  <div key={item.id} className="flex items-start justify-between p-3 rounded-md bg-white shadow-sm hover:bg-[#ECE7E3]/10 transition-colors">
                     <div>
-                      <h4 className="font-medium">{item.name}</h4>
+                      <h4 className="font-medium text-[#021122]">{item.name}</h4>
                       {item.date && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[#619DB5]">
                           Diagnostiqué le: {new Date(item.date).toLocaleDateString('fr-FR')}
                         </p>
                       )}
                       {item.description && (
-                        <p className="text-sm mt-1">{item.description}</p>
+                        <p className="text-sm mt-1 text-[#334349]">{item.description}</p>
                       )}
                     </div>
                     <div className="flex space-x-1">
@@ -462,6 +459,7 @@ const PatientDetail = () => {
                         variant="ghost" 
                         size="icon"
                         onClick={() => startEditingMedicalHistory(item)}
+                        className="text-[#2980BA] hover:bg-[#ECE7E3]/20"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -469,8 +467,9 @@ const PatientDetail = () => {
                         variant="ghost" 
                         size="icon"
                         onClick={() => handleDeleteMedicalHistory(item.id)}
+                        className="text-red-500 hover:bg-red-50"
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -481,16 +480,17 @@ const PatientDetail = () => {
         </Card>
 
         {/* Antecedents/Allergies Section */}
-        <Card>
+        <Card className="shadow-md">
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>Allergies</CardTitle>
+              <CardTitle className="text-[#2980BA]">Allergies</CardTitle>
               <Button 
                 size="sm" 
                 onClick={() => {
                   setEditingAntecedent(null);
                   setShowAntecedentForm(true);
                 }}
+                className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Ajouter
@@ -506,23 +506,23 @@ const PatientDetail = () => {
                 isEditing={!!editingAntecedent}
               />
             ) : antecedents.length === 0 ? (
-              <p className="text-gray-500">Aucune allergie connue</p>
+              <p className="text-[#334349]">Aucune allergie connue</p>
             ) : (
               <div className="space-y-4">
                 {antecedents.map((item) => (
-                  <div key={item.id} className="flex items-start justify-between p-3 border rounded-md bg-red-50">
+                  <div key={item.id} className="flex items-start justify-between p-3 rounded-md bg-white shadow-sm hover:bg-[#ECE7E3]/10 transition-colors">
                     <div>
                       <div className="flex items-center">
-                        <AlertTriangle className="h-4 w-4 text-red-500 mr-2" />
-                        <h4 className="font-medium">{item.name}</h4>
+                        <AlertTriangle className="h-4 w-4 text-amber-500 mr-2" />
+                        <h4 className="font-medium text-[#021122]">{item.name}</h4>
                       </div>
                       {item.date && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-[#619DB5]">
                           Découvert le: {new Date(item.date).toLocaleDateString('fr-FR')}
                         </p>
                       )}
                       {item.description && (
-                        <p className="text-sm mt-1">{item.description}</p>
+                        <p className="text-sm mt-1 text-[#334349]">{item.description}</p>
                       )}
                     </div>
                     <div className="flex space-x-1">
@@ -530,6 +530,7 @@ const PatientDetail = () => {
                         variant="ghost" 
                         size="icon"
                         onClick={() => startEditingAntecedent(item)}
+                        className="text-[#2980BA] hover:bg-[#ECE7E3]/20"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -537,8 +538,9 @@ const PatientDetail = () => {
                         variant="ghost" 
                         size="icon"
                         onClick={() => handleDeleteAntecedent(item.id)}
+                        className="text-red-500 hover:bg-red-50"
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -556,17 +558,21 @@ const PatientDetail = () => {
       {/* En-tête avec informations patient */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center">
-          <Button variant="ghost" onClick={() => navigate('/dashboard/patients')} className="mr-4">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/dashboard/patients')} 
+            className="mr-4 text-[#334349] hover:bg-[#ECE7E3]/20 hover:text-[#2980BA]"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Retour
           </Button>
           <div className="flex items-center">
-            <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 text-xl font-bold mr-4">
+            <div className="h-16 w-16 rounded-full bg-[#2980BA]/20 flex items-center justify-center text-[#2980BA] text-xl font-bold mr-4">
               {patient.firstname?.[0]}{patient.lastname?.[0]}
             </div>
             <div>
-              <h1 className="text-2xl font-bold">{patient.firstname} {patient.lastname}</h1>
-              <div className="flex items-center mt-1 text-sm text-gray-500">
+              <h1 className="text-2xl font-bold text-[#021122]">{patient.firstname} {patient.lastname}</h1>
+              <div className="flex items-center mt-1 text-sm text-[#619DB5]">
                 <User className="h-4 w-4 mr-1" />
                 <span>{calculateAge(patient.birth_date)} ans</span>
                 <span className="mx-2">•</span>
@@ -583,16 +589,30 @@ const PatientDetail = () => {
             patient.mrc_status === MRCStage.STAGE_1 || patient.mrc_status === MRCStage.STAGE_2 ? "outline" :
             patient.mrc_status === MRCStage.STAGE_3A || patient.mrc_status === MRCStage.STAGE_3B ? "secondary" :
             "destructive"
-          } className="text-sm">
+          } className={`text-sm ${
+            (patient.mrc_status === MRCStage.STAGE_1 || patient.mrc_status === MRCStage.STAGE_2) 
+              ? "border-[#91BDC8] text-[#334349]" 
+              : (patient.mrc_status === MRCStage.STAGE_3A || patient.mrc_status === MRCStage.STAGE_3B)
+              ? "bg-[#619DB5]/20 text-[#2980BA] border-[#91BDC8]"
+              : ""
+          }`}>
             MRC Stade {patient.mrc_status || "N/A"}
           </Badge>
           
-          <Button variant="outline" size="sm" onClick={() => setShowAppointmentDialog(true)}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowAppointmentDialog(true)}
+            className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20 hover:text-[#2980BA]"
+          >
             <Calendar className="h-4 w-4 mr-2" />
             Planifier un RDV
           </Button>
           
-          <Button size="sm">
+          <Button 
+            size="sm"
+            className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Ajouter une note
           </Button>
@@ -603,37 +623,37 @@ const PatientDetail = () => {
         <TabsList className="border-b w-full justify-start rounded-none bg-transparent p-0">
           <TabsTrigger 
             value="overview" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary-500 data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#2980BA] data-[state=active]:text-[#2980BA] data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent text-[#334349]"
           >
             Vue d'ensemble
           </TabsTrigger>
           <TabsTrigger 
             value="results" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary-500 data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#2980BA] data-[state=active]:text-[#2980BA] data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent text-[#334349]"
           >
             Résultats d'analyses
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary-500 data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#2980BA] data-[state=active]:text-[#2980BA] data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent text-[#334349]"
           >
             Historique médical
           </TabsTrigger>
           <TabsTrigger 
             value="treatment" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary-500 data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#2980BA] data-[state=active]:text-[#2980BA] data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent text-[#334349]"
           >
             Traitement
           </TabsTrigger>
           <TabsTrigger 
             value="workflows" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary-500 data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#2980BA] data-[state=active]:text-[#2980BA] data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent text-[#334349]"
           >
             Workflows
           </TabsTrigger>
           <TabsTrigger 
             value="notes" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary-500 data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#2980BA] data-[state=active]:text-[#2980BA] data-[state=active]:shadow-none py-3 px-4 data-[state=active]:bg-transparent text-[#334349]"
           >
             Notes
           </TabsTrigger>
@@ -643,53 +663,53 @@ const PatientDetail = () => {
         <TabsContent value="overview" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Informations de contact */}
-            <Card>
+            <Card className="shadow-md">
               <CardHeader>
-                <CardTitle>Informations de contact</CardTitle>
+                <CardTitle className="text-[#2980BA]">Informations de contact</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start">
-                  <Phone className="h-5 w-5 mr-3 text-gray-500" />
+                  <Phone className="h-5 w-5 mr-3 text-[#619DB5]" />
                   <div>
-                    <p className="text-sm font-medium">Téléphone</p>
-                    <p className="text-sm">{patient.phoneNumber || "Non renseigné"}</p>
+                    <p className="text-sm font-medium text-[#021122]">Téléphone</p>
+                    <p className="text-sm text-[#334349]">{patient.phoneNumber || "Non renseigné"}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <Mail className="h-5 w-5 mr-3 text-gray-500" />
+                  <Mail className="h-5 w-5 mr-3 text-[#619DB5]" />
                   <div>
-                    <p className="text-sm font-medium">Email</p>
-                    <p className="text-sm">{patient.email || "Non renseigné"}</p>
+                    <p className="text-sm font-medium text-[#021122]">Email</p>
+                    <p className="text-sm text-[#334349]">{patient.email || "Non renseigné"}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <MapPin className="h-5 w-5 mr-3 text-gray-500" />
+                  <MapPin className="h-5 w-5 mr-3 text-[#619DB5]" />
                   <div>
-                    <p className="text-sm font-medium">Adresse</p>
-                    <p className="text-sm">{patient.address || "Non renseignée"}</p>
+                    <p className="text-sm font-medium text-[#021122]">Adresse</p>
+                    <p className="text-sm text-[#334349]">{patient.address || "Non renseignée"}</p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <Clock className="h-5 w-5 mr-3 text-gray-500" />
+                  <Clock className="h-5 w-5 mr-3 text-[#619DB5]" />
                   <div>
-                    <p className="text-sm font-medium">Prochain rendez-vous</p>
-                    <p className="text-sm">Non planifié</p>
+                    <p className="text-sm font-medium text-[#021122]">Prochain rendez-vous</p>
+                    <p className="text-sm text-[#334349]">Non planifié</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
             {/* Derniers résultats */}
-            <Card className="md:col-span-2">
+            <Card className="md:col-span-2 shadow-md">
               <CardHeader>
-                <CardTitle>Derniers résultats clés</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-[#2980BA]">Derniers résultats clés</CardTitle>
+                <CardDescription className="text-[#334349]">
                   Aucune analyse récente
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-center items-center py-8">
-                  <p className="text-gray-500">Aucun résultat d'analyse disponible pour ce patient.</p>
+                  <p className="text-[#334349]">Aucun résultat d'analyse disponible pour ce patient.</p>
                 </div>
               </CardContent>
             </Card>
@@ -697,37 +717,37 @@ const PatientDetail = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             {/* Évolution du DFG */}
-            <Card>
+            <Card className="shadow-md">
               <CardHeader>
-                <CardTitle>Évolution du DFG</CardTitle>
-                <CardDescription>Tendance</CardDescription>
+                <CardTitle className="text-[#2980BA]">Évolution du DFG</CardTitle>
+                <CardDescription className="text-[#334349]">Tendance</CardDescription>
               </CardHeader>
               <CardContent className="h-80">
                 <div className="flex justify-center items-center h-full">
-                  <p className="text-gray-500">Aucune donnée d'évolution disponible.</p>
+                  <p className="text-[#334349]">Aucune donnée d'évolution disponible.</p>
                 </div>
               </CardContent>
             </Card>
             
             {/* Recommandations */}
-            <Card>
+            <Card className="shadow-md">
               <CardHeader>
-                <CardTitle>Recommandations cliniques</CardTitle>
-                <CardDescription>Basées sur les derniers résultats</CardDescription>
+                <CardTitle className="text-[#2980BA]">Recommandations cliniques</CardTitle>
+                <CardDescription className="text-[#334349]">Basées sur les derniers résultats</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="border rounded-lg p-4 bg-secondary-50">
+                  <div className="rounded-lg p-4 bg-white shadow-sm hover:bg-[#ECE7E3]/10 transition-colors">
                     <div className="flex items-start">
-                      <div className="p-2 rounded-full mr-3 bg-secondary-100 text-secondary-600">
+                      <div className="p-2 rounded-full mr-3 bg-[#2980BA]/10 text-[#2980BA]">
                         <Brain className="h-4 w-4" />
                       </div>
                       <div>
                         <div className="flex items-center">
-                          <h4 className="font-medium text-sm">Surveillance régulière de la fonction rénale</h4>
-                          <Badge variant="outline" className="ml-2 text-xs">Priorité</Badge>
+                          <h4 className="font-medium text-sm text-[#021122]">Surveillance régulière de la fonction rénale</h4>
+                          <Badge variant="outline" className="ml-2 text-xs border-[#91BDC8] text-[#334349]">Priorité</Badge>
                         </div>
-                        <p className="text-xs mt-1 text-gray-500">Programmez une analyse complète de la fonction rénale avec un suivi régulier.</p>
+                        <p className="text-xs mt-1 text-[#334349]">Programmez une analyse complète de la fonction rénale avec un suivi régulier.</p>
                       </div>
                     </div>
                   </div>
@@ -739,16 +759,16 @@ const PatientDetail = () => {
         
         {/* Contenu de l'onglet Résultats d'analyses */}
         <TabsContent value="results" className="mt-6">
-          <Card>
+          <Card className="shadow-md">
             <CardHeader>
-              <CardTitle>Historique des analyses</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-[#2980BA]">Historique des analyses</CardTitle>
+              <CardDescription className="text-[#334349]">
                 Tendances et évolution des marqueurs biologiques
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex justify-center items-center py-8">
-                <p className="text-gray-500">Aucun résultat d'analyse disponible pour ce patient.</p>
+                <p className="text-[#334349]">Aucun résultat d'analyse disponible pour ce patient.</p>
               </div>
             </CardContent>
           </Card>
@@ -759,15 +779,15 @@ const PatientDetail = () => {
         
         {/* Contenu des autres onglets (treatment, workflows, notes) */}
         <TabsContent value="treatment" className="mt-6">
-          <Card>
+          <Card className="shadow-md">
             <CardHeader>
-              <CardTitle>Médicaments actuels</CardTitle>
+              <CardTitle className="text-[#2980BA]">Médicaments actuels</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-500">Aucun médicament enregistré</p>
+              <p className="text-[#334349]">Aucun médicament enregistré</p>
             </CardContent>
-            <CardFooter>
-              <Button className="w-full">
+            <CardFooter className="pt-2">
+              <Button className="w-full bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]">
                 <Plus className="h-4 w-4 mr-2" />
                 Ajouter un médicament
               </Button>
@@ -776,35 +796,35 @@ const PatientDetail = () => {
         </TabsContent>
         
         <TabsContent value="workflows" className="mt-6">
-          <Card>
-            <CardHeader>
+          <Card className="shadow-md">
+            <CardHeader className="border-b border-[#91BDC8]/30">
               <div className="flex justify-between items-center">
-                <CardTitle>Workflows assignés</CardTitle>
-                <Button size="sm">
+                <CardTitle className="text-[#2980BA]">Workflows assignés</CardTitle>
+                <Button size="sm" className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]">
                   <Plus className="h-4 w-4 mr-2" />
                   Assigner un workflow
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-500">Aucun workflow assigné</p>
+              <p className="text-[#334349]">Aucun workflow assigné</p>
             </CardContent>
           </Card>
         </TabsContent>
         
         <TabsContent value="notes" className="mt-6">
-          <Card>
-            <CardHeader>
+          <Card className="shadow-md">
+            <CardHeader className="border-b border-[#91BDC8]/30">
               <div className="flex justify-between items-center">
-                <CardTitle>Notes cliniques</CardTitle>
-                <Button size="sm">
+                <CardTitle className="text-[#2980BA]">Notes cliniques</CardTitle>
+                <Button size="sm" className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]">
                   <Plus className="h-4 w-4 mr-2" />
                   Nouvelle note
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-500">Aucune note disponible</p>
+              <p className="text-[#334349]">Aucune note disponible</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -814,8 +834,8 @@ const PatientDetail = () => {
       <Dialog open={showAppointmentDialog} onOpenChange={setShowAppointmentDialog}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
-            <DialogTitle>Programmer un rendez-vous</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[#2980BA]">Programmer un rendez-vous</DialogTitle>
+            <DialogDescription className="text-[#334349]">
               Programmez un nouveau rendez-vous pour {patient.firstname} {patient.lastname}
             </DialogDescription>
           </DialogHeader>

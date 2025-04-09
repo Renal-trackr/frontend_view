@@ -157,27 +157,29 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="name">Nom de l'étape</Label>
+          <Label htmlFor="name" className="text-[#334349]">Nom de l'étape</Label>
           <Input
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Ex: Rappel de rendez-vous"
+            className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description" className="text-[#334349]">Description</Label>
           <Textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Détails sur cette étape du workflow"
             rows={2}
+            className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="stepType">Type d'étape</Label>
+          <Label htmlFor="stepType" className="text-[#334349]">Type d'étape</Label>
           <Select 
             value={advancedStepType} 
             onValueChange={(v) => {
@@ -188,10 +190,10 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
               }
             }}
           >
-            <SelectTrigger className="w-full" id="stepType">
+            <SelectTrigger className="w-full border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]" id="stepType">
               <SelectValue placeholder="Sélectionner le type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="border-[#91BDC8]">
               <SelectItem value={AdvancedStepType.REMINDER}>Rappel</SelectItem>
               <SelectItem value={AdvancedStepType.TASK}>Tâche</SelectItem>
               <SelectItem value={AdvancedStepType.ALERT}>Alerte</SelectItem>
@@ -258,8 +260,8 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
         </div>
 
         {advancedStepType === AdvancedStepType.MEDICAL_TEST && (
-          <div className="space-y-5 p-4 border rounded-md bg-blue-50/30">
-            <h3 className="font-medium text-blue-800">Détails du test médical</h3>
+          <div className="space-y-5 p-4 border border-[#91BDC8] rounded-md bg-[#91BDC8]/10">
+            <h3 className="font-medium text-[#021122]">Détails du test médical</h3>
             
             <div className="space-y-2">
               <Label htmlFor="test-medical-type">Type de test</Label>
@@ -364,10 +366,10 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
               )}
             </div>
             
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Traitement des résultats</AlertTitle>
-              <AlertDescription>
+            <Alert className="bg-[#ECE7E3]/30 border-[#91BDC8]">
+              <AlertCircle className="h-4 w-4 text-[#2980BA]" />
+              <AlertTitle className="text-[#021122]">Traitement des résultats</AlertTitle>
+              <AlertDescription className="text-[#334349]">
                 Les résultats de ce test pourront être utilisés pour déclencher des actions spécifiques en fonction des valeurs observées.
               </AlertDescription>
             </Alert>
@@ -416,16 +418,17 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="step-dependency">Dépend d'une étape précédente</Label>
+            <Label htmlFor="step-dependency" className="text-[#334349]">Dépend d'une étape précédente</Label>
             <Switch
               id="step-dependency"
               checked={hasDependency}
               onCheckedChange={setHasDependency}
+              className="data-[state=checked]:bg-[#2980BA]"
             />
           </div>
           
           {hasDependency && (
-            <div className="space-y-4 p-4 border rounded-md">
+            <div className="space-y-4 p-4 border border-[#91BDC8] rounded-md">
               <div className="space-y-2">
                 <Label htmlFor="depends-on-step">Étape précédente (numéro)</Label>
                 <Input
@@ -453,10 +456,10 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
                 </Select>
               </div>
               
-              <Alert variant="warning">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Condition d'exécution</AlertTitle>
-                <AlertDescription>
+              <Alert className="bg-[#ECE7E3]/30 border-[#91BDC8]">
+                <AlertCircle className="h-4 w-4 text-[#2980BA]" />
+                <AlertTitle className="text-[#021122]">Condition d'exécution</AlertTitle>
+                <AlertDescription className="text-[#334349]">
                   Cette étape ne sera exécutée que si l'étape {dependsOnStep} a le résultat "{expectedOutcome}".
                 </AlertDescription>
               </Alert>
@@ -465,11 +468,19 @@ const WorkflowStepForm: React.FC<WorkflowStepFormProps> = ({
         </div>
       </div>
 
-      <div className="flex justify-end space-x-2 py-3 pt-4 bg-white mt-3">
-        <Button type="button" variant="outline" onClick={onCancel}>
+      <div className="flex justify-end space-x-2 py-3 pt-4 mt-3">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={onCancel}
+          className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+        >
           Annuler
         </Button>
-        <Button type="submit">
+        <Button 
+          type="submit"
+          className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
+        >
           {initialData?._id ? "Mettre à jour" : "Ajouter l'étape"}
         </Button>
       </div>

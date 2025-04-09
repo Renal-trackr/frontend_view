@@ -68,33 +68,33 @@ export const WorkflowStepCard: React.FC<WorkflowStepCardProps> = ({ step, index 
   };
 
   return (
-    <div className="border rounded-md p-3 hover:bg-gray-50">
+    <div className="border border-[#91BDC8]/30 rounded-md p-3 bg-white hover:bg-[#ECE7E3]/10">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
-          <div className="bg-gray-100 rounded-full w-6 h-6 flex items-center justify-center mr-2">
+          <div className="bg-[#91BDC8]/20 rounded-full w-6 h-6 flex items-center justify-center mr-2 text-[#2980BA]">
             {index + 1}
           </div>
-          <div className="font-medium flex items-center">
+          <div className="font-medium flex items-center text-[#021122]">
             {getStepIcon()}
             <span className="ml-1">{step.name}</span>
           </div>
         </div>
-        <Badge variant="outline">{getStepTypeLabel()}</Badge>
+        <Badge variant="outline" className="border-[#91BDC8] text-[#334349]">{getStepTypeLabel()}</Badge>
       </div>
       
       {step.description && (
-        <p className="text-sm text-gray-600 mb-2">{step.description}</p>
+        <p className="text-sm text-[#334349] mb-2">{step.description}</p>
       )}
       
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-[#619DB5]">
         <div className="flex items-center">
-          <span className="mr-1">Condition:</span>
+          <span className="mr-1 text-[#334349]">Condition:</span>
           <span>{getConditionDescription()}</span>
         </div>
         
         {step.type === 'analysis_test' && step.action?.test_type && (
           <div className="mt-1">
-            <span className="font-medium">Type de test:</span> {step.action.test_type}
+            <span className="font-medium text-[#334349]">Type de test:</span> {step.action.test_type}
           </div>
         )}
       </div>

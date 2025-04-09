@@ -206,7 +206,7 @@ const AppointmentsPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Rendez-vous</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-[#021122]">Rendez-vous</h1>
         <Dialog open={showDialog} onOpenChange={(open) => {
           setShowDialog(open);
           if (!open) {
@@ -214,20 +214,23 @@ const AppointmentsPage = () => {
           }
         }}>
           <DialogTrigger asChild>
-            <Button onClick={() => {
-              setEditingAppointment(null);
-              setSelectedDate(null); // Reset date when opening from main button
-            }}>
+            <Button 
+              onClick={() => {
+                setEditingAppointment(null);
+                setSelectedDate(null); // Reset date when opening from main button
+              }}
+              className="bg-[#2980BA] hover:bg-[#619DB5] text-white"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Nouveau rendez-vous
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[550px]">
+          <DialogContent className="sm:max-w-[550px] border-[#91BDC8]">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-[#2980BA]">
                 {editingAppointment ? "Modifier le rendez-vous" : "Nouveau rendez-vous"}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-[#334349]">
                 {editingAppointment
                   ? "Modifiez les informations du rendez-vous existant."
                   : selectedDate 
@@ -255,12 +258,18 @@ const AppointmentsPage = () => {
 
       <div className="flex justify-between items-center">
         <Tabs value={view} onValueChange={(v) => setView(v as "list" | "calendar")}>
-          <TabsList>
-            <TabsTrigger value="calendar">
+          <TabsList className="border-[#91BDC8] bg-[#ECE7E3]/50">
+            <TabsTrigger 
+              value="calendar" 
+              className="data-[state=active]:bg-white data-[state=active]:text-[#2980BA]"
+            >
               <Calendar className="h-4 w-4 mr-2" />
               Calendrier
             </TabsTrigger>
-            <TabsTrigger value="list">
+            <TabsTrigger 
+              value="list" 
+              className="data-[state=active]:bg-white data-[state=active]:text-[#2980BA]"
+            >
               <Users className="h-4 w-4 mr-2" />
               Liste
             </TabsTrigger>
@@ -271,25 +280,41 @@ const AppointmentsPage = () => {
             placeholder="Rechercher..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-[200px]"
+            className="w-[200px] border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+              >
                 Statut: {filteredStatus || "Tous"}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setFilteredStatus(null)}>
+            <DropdownMenuContent className="border-[#91BDC8]">
+              <DropdownMenuItem 
+                onClick={() => setFilteredStatus(null)}
+                className="text-[#021122] focus:bg-[#ECE7E3] focus:text-[#2980BA]"
+              >
                 Tous
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilteredStatus("scheduled")}>
+              <DropdownMenuItem 
+                onClick={() => setFilteredStatus("scheduled")}
+                className="text-[#021122] focus:bg-[#ECE7E3] focus:text-[#2980BA]"
+              >
                 Programmés
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilteredStatus("completed")}>
+              <DropdownMenuItem 
+                onClick={() => setFilteredStatus("completed")}
+                className="text-[#021122] focus:bg-[#ECE7E3] focus:text-[#2980BA]"
+              >
                 Terminés
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilteredStatus("cancelled")}>
+              <DropdownMenuItem 
+                onClick={() => setFilteredStatus("cancelled")}
+                className="text-[#021122] focus:bg-[#ECE7E3] focus:text-[#2980BA]"
+              >
                 Annulés
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -299,21 +324,36 @@ const AppointmentsPage = () => {
 
       <Tabs value={view} className="space-y-4">
         <TabsContent value="calendar" className="mt-0">
-          <Card>
-            <CardHeader className="pb-3">
+          <Card className="border-[#91BDC8] shadow-md">
+            <CardHeader className="pb-3 bg-gradient-to-r from-[#ECE7E3] to-[#FAFAFA]">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center space-x-4">
-                  <Button variant="outline" size="icon" onClick={prevMonth}>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={prevMonth}
+                    className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+                  >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <h2 className="text-xl font-bold">
+                  <h2 className="text-xl font-bold text-[#2980BA]">
                     {format(currentDate, 'MMMM yyyy', { locale: fr })}
                   </h2>
-                  <Button variant="outline" size="icon" onClick={nextMonth}>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={nextMonth}
+                    className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+                  >
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button variant="outline" size="sm" onClick={goToToday}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={goToToday}
+                  className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+                >
                   Aujourd'hui
                 </Button>
               </div>
@@ -322,7 +362,7 @@ const AppointmentsPage = () => {
               {/* En-têtes des jours de la semaine */}
               <div className="grid grid-cols-7 gap-2 mb-2">
                 {weekDayNames.map((dayName, i) => (
-                  <div key={i} className="p-2 text-center font-medium text-gray-600 capitalize">
+                  <div key={i} className="p-2 text-center font-medium text-[#334349] capitalize">
                     {dayName.substring(0, 3)}
                   </div>
                 ))}
@@ -333,17 +373,17 @@ const AppointmentsPage = () => {
                 {monthDays.map((day, i) => (
                   <div 
                     key={i} 
-                    className={`border rounded-md overflow-hidden h-32 ${
-                      !isSameMonth(day, currentDate) ? 'bg-gray-50 opacity-50' : ''
+                    className={`border border-[#91BDC8] rounded-md overflow-hidden h-32 ${
+                      !isSameMonth(day, currentDate) ? 'bg-[#ECE7E3]/30 opacity-50' : ''
                     } ${
-                      isSameDay(day, new Date()) ? 'bg-primary-50 border-primary-200' : ''
+                      isSameDay(day, new Date()) ? 'bg-[#2980BA]/10 border-[#2980BA]' : ''
                     }`}
                   >
                     <div 
                       className={`p-2 text-right text-sm ${
                         isSameDay(day, new Date()) 
-                          ? 'font-bold text-primary-700' 
-                          : 'text-gray-700'
+                          ? 'font-bold text-[#2980BA]' 
+                          : 'text-[#334349]'
                       }`}
                     >
                       {format(day, 'd')}
@@ -354,15 +394,15 @@ const AppointmentsPage = () => {
                           key={appointment.id} 
                           className={`
                             mb-1 p-1 rounded-md text-xs cursor-pointer
-                            ${appointment.type === "consultation" ? "bg-primary-50 border-l-2 border-primary-500" : 
-                              appointment.type === "bilan" ? "bg-success-50 border-l-2 border-success-500" :
-                              appointment.type === "education" ? "bg-warning-50 border-l-2 border-warning-500" :
-                              "bg-secondary-50 border-l-2 border-secondary-500"}
+                            ${appointment.type === "consultation" ? "bg-[#2980BA]/10 border-l-2 border-[#2980BA]" : 
+                              appointment.type === "bilan" ? "bg-[#619DB5]/10 border-l-2 border-[#619DB5]" :
+                              appointment.type === "education" ? "bg-[#91BDC8]/10 border-l-2 border-[#91BDC8]" :
+                              "bg-[#ECE7E3] border-l-2 border-[#334349]"}
                           `}
                           onClick={() => handleEditAppointment(appointment)}
                           title={`${appointment.time} - ${getPatientName(appointment.patientId)} - ${appointment.type}`}
                         >
-                          <div className="font-medium truncate">{appointment.time} - {getPatientName(appointment.patientId)}</div>
+                          <div className="font-medium truncate text-[#021122]">{appointment.time} - {getPatientName(appointment.patientId)}</div>
                         </div>
                       ))}
 
@@ -370,7 +410,7 @@ const AppointmentsPage = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="w-full h-6 text-xs justify-start text-gray-400 hover:text-primary-500"
+                          className="w-full h-6 text-xs justify-start text-[#619DB5] hover:text-[#2980BA] hover:bg-[#ECE7E3]/20"
                           onClick={() => {
                             setEditingAppointment(null);
                             // Pré-remplir la date pour le nouveau rendez-vous
@@ -391,9 +431,9 @@ const AppointmentsPage = () => {
         </TabsContent>
 
         <TabsContent value="list" className="mt-0">
-          <Card>
-            <CardHeader>
-              <CardTitle>Liste des rendez-vous</CardTitle>
+          <Card className="border-[#91BDC8] shadow-md">
+            <CardHeader className="bg-gradient-to-r from-[#ECE7E3] to-[#FAFAFA]">
+              <CardTitle className="text-[#2980BA]">Liste des rendez-vous</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -401,22 +441,22 @@ const AppointmentsPage = () => {
                   filteredAppointments.map(appointment => (
                     <div 
                       key={appointment.id} 
-                      className="flex items-start justify-between p-3 border rounded-md hover:bg-gray-50"
+                      className="flex items-start justify-between p-3 border border-[#91BDC8] rounded-md hover:bg-[#ECE7E3]/20"
                     >
                       <div className="flex items-start space-x-3">
                         <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-primary-100 text-primary-700">
+                          <AvatarFallback className="bg-[#2980BA]/20 text-[#2980BA]">
                             {getPatientInitials(appointment.patientId)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <Link 
                             to={`/dashboard/patients/${appointment.patientId}`} 
-                            className="font-medium hover:text-primary-600"
+                            className="font-medium text-[#021122] hover:text-[#2980BA]"
                           >
                             {getPatientName(appointment.patientId)}
                           </Link>
-                          <div className="flex items-center mt-1 text-sm">
+                          <div className="flex items-center mt-1 text-sm text-[#619DB5]">
                             <Calendar className="h-3 w-3 mr-1" />
                             <span>{appointment.date}</span>
                             <span className="mx-1">•</span>
@@ -429,6 +469,14 @@ const AppointmentsPage = () => {
                               appointment.type === "bilan" ? "success" :
                               appointment.type === "education" ? "warning" :
                               "secondary"
+                            } className={
+                              appointment.type === "consultation" 
+                                ? "bg-[#2980BA] text-white hover:bg-[#619DB5]" 
+                                : appointment.type === "bilan" 
+                                ? "bg-[#619DB5] text-white hover:bg-[#91BDC8]" 
+                                : appointment.type === "education" 
+                                ? "bg-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]" 
+                                : ""
                             }>
                               {appointment.type}
                             </Badge>
@@ -438,7 +486,13 @@ const AppointmentsPage = () => {
                                 appointment.status === "completed" ? "success" :
                                 "destructive"
                               }
-                              className="ml-2"
+                              className={`ml-2 ${
+                                appointment.status === "scheduled" 
+                                  ? "border-[#91BDC8] text-[#334349]"
+                                  : appointment.status === "completed"
+                                  ? "bg-[#619DB5] text-white hover:bg-[#2980BA]"
+                                  : ""
+                              }`}
                             >
                               {appointment.status === "scheduled" ? "Programmé" :
                                appointment.status === "completed" ? "Terminé" :
@@ -446,7 +500,7 @@ const AppointmentsPage = () => {
                             </Badge>
                           </div>
                           {appointment.notes && (
-                            <p className="text-sm text-gray-500 mt-1">{appointment.notes}</p>
+                            <p className="text-sm text-[#334349] mt-1">{appointment.notes}</p>
                           )}
                         </div>
                       </div>
@@ -455,6 +509,7 @@ const AppointmentsPage = () => {
                           variant="ghost" 
                           size="sm" 
                           onClick={() => handleEditAppointment(appointment)}
+                          className="text-[#2980BA] hover:bg-[#ECE7E3]/20"
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -462,14 +517,15 @@ const AppointmentsPage = () => {
                           variant="ghost" 
                           size="sm"
                           onClick={() => handleDeleteAppointment(appointment.id)}
+                          className="text-red-500 hover:bg-red-50 hover:text-red-700"
                         >
-                          <Trash2 className="h-4 w-4 text-danger-500" />
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center p-6 text-gray-500">
+                  <div className="text-center p-6 text-[#619DB5]">
                     Aucun rendez-vous ne correspond à vos critères
                   </div>
                 )}

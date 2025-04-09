@@ -48,7 +48,7 @@ type StepProps = {
   updateFormData: (data: any) => void;
 };
 
-// Étape 1 : Informations personnelles
+
 const PersonalInfoStep: React.FC<StepProps> = ({ 
   onNext, 
   formData, 
@@ -100,57 +100,57 @@ const PersonalInfoStep: React.FC<StepProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Informations personnelles</h2>
-        <p className="text-sm text-gray-500">Entrez les informations de base du patient</p>
+        <h2 className="text-xl font-semibold text-[#021122]">Informations personnelles</h2>
+        <p className="text-sm text-[#334349]">Entrez les informations de base du patient</p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="firstName">Prénom <span className="text-red-500">*</span></Label>
+          <Label htmlFor="firstName" className="text-[#334349]">Prénom <span className="text-red-500">*</span></Label>
           <Input
             id="firstName"
             name="firstName"
             value={formData.firstName || ""}
             onChange={handleChange}
             placeholder="Prénom du patient"
-            className={errors.firstName ? "border-red-500" : ""}
+            className={`border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5] ${errors.firstName ? "border-red-500" : ""}`}
           />
           {errors.firstName && <p className="text-xs text-red-500">{errors.firstName}</p>}
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="lastName">Nom <span className="text-red-500">*</span></Label>
+          <Label htmlFor="lastName" className="text-[#334349]">Nom <span className="text-red-500">*</span></Label>
           <Input
             id="lastName"
             name="lastName"
             value={formData.lastName || ""}
             onChange={handleChange}
             placeholder="Nom du patient"
-            className={errors.lastName ? "border-red-500" : ""}
+            className={`border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5] ${errors.lastName ? "border-red-500" : ""}`}
           />
           {errors.lastName && <p className="text-xs text-red-500">{errors.lastName}</p>}
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="dateOfBirth">Date de naissance <span className="text-red-500">*</span></Label>
+          <Label htmlFor="dateOfBirth" className="text-[#334349]">Date de naissance <span className="text-red-500">*</span></Label>
           <Input
             id="dateOfBirth"
             name="dateOfBirth"
             type="date"
             value={formData.dateOfBirth || ""}
             onChange={handleChange}
-            className={errors.dateOfBirth ? "border-red-500" : ""}
+            className={`border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5] ${errors.dateOfBirth ? "border-red-500" : ""}`}
           />
           {errors.dateOfBirth && <p className="text-xs text-red-500">{errors.dateOfBirth}</p>}
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="gender">Genre <span className="text-red-500">*</span></Label>
+          <Label htmlFor="gender" className="text-[#334349]">Genre <span className="text-red-500">*</span></Label>
           <Select
             value={formData.gender || ""}
             onValueChange={(value) => handleSelectChange("gender", value)}
           >
-            <SelectTrigger id="gender" className={errors.gender ? "border-red-500" : ""}>
+            <SelectTrigger id="gender" className={`border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5] ${errors.gender ? "border-red-500" : ""}`}>
               <SelectValue placeholder="Sélectionner" />
             </SelectTrigger>
             <SelectContent>
@@ -162,11 +162,11 @@ const PersonalInfoStep: React.FC<StepProps> = ({
         </div>
       </div>
       
-      <Separator />
+      <Separator className="bg-[#91BDC8]/50" />
       
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="address">Adresse</Label>
+          <Label htmlFor="address" className="text-[#334349]">Adresse</Label>
           <Textarea
             id="address"
             name="address"
@@ -174,25 +174,26 @@ const PersonalInfoStep: React.FC<StepProps> = ({
             onChange={handleChange}
             placeholder="Adresse complète du patient"
             rows={3}
+            className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
           />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Téléphone <span className="text-red-500">*</span></Label>
+            <Label htmlFor="phoneNumber" className="text-[#334349]">Téléphone <span className="text-red-500">*</span></Label>
             <Input
               id="phoneNumber"
               name="phoneNumber"
               value={formData.phoneNumber || ""}
               onChange={handleChange}
               placeholder="Numéro de téléphone"
-              className={errors.phoneNumber ? "border-red-500" : ""}
+              className={`border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5] ${errors.phoneNumber ? "border-red-500" : ""}`}
             />
             {errors.phoneNumber && <p className="text-xs text-red-500">{errors.phoneNumber}</p>}
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-[#334349]">Email</Label>
             <Input
               id="email"
               name="email"
@@ -200,13 +201,14 @@ const PersonalInfoStep: React.FC<StepProps> = ({
               value={formData.email || ""}
               onChange={handleChange}
               placeholder="Adresse email"
+              className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             />
           </div>
         </div>
       </div>
       
       <div className="flex justify-end">
-        <Button onClick={handleNext}>
+        <Button onClick={handleNext} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
           Suivant
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -215,7 +217,7 @@ const PersonalInfoStep: React.FC<StepProps> = ({
   );
 };
 
-// Étape 2 : Informations médicales
+
 const MedicalInfoStep: React.FC<StepProps> = ({ 
   onNext, 
   onPrevious, 
@@ -279,19 +281,19 @@ const MedicalInfoStep: React.FC<StepProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Informations médicales</h2>
-        <p className="text-sm text-gray-500">Ajoutez les antécédents médicaux et traitements en cours</p>
+        <h2 className="text-xl font-semibold text-[#021122]">Informations médicales</h2>
+        <p className="text-sm text-[#334349]">Ajoutez les antécédents médicaux et traitements en cours</p>
       </div>
       
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="mrcStage">Stade MRC</Label>
+            <Label htmlFor="mrcStage" className="text-[#334349]">Stade MRC</Label>
             <Select
               value={formData.mrcStage || ""}
               onValueChange={(value) => handleSelectChange("mrcStage", value)}
             >
-              <SelectTrigger id="mrcStage">
+              <SelectTrigger id="mrcStage" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                 <SelectValue placeholder="Sélectionner un stade" />
               </SelectTrigger>
               <SelectContent>
@@ -306,12 +308,12 @@ const MedicalInfoStep: React.FC<StepProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="bloodGroup">Groupe sanguin</Label>
+            <Label htmlFor="bloodGroup" className="text-[#334349]">Groupe sanguin</Label>
             <Select
               value={formData.bloodGroup || ""}
               onValueChange={(value) => handleSelectChange("bloodGroup", value)}
             >
-              <SelectTrigger id="bloodGroup">
+              <SelectTrigger id="bloodGroup" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                 <SelectValue placeholder="Sélectionner un groupe" />
               </SelectTrigger>
               <SelectContent>
@@ -329,12 +331,12 @@ const MedicalInfoStep: React.FC<StepProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="patientStatus">Statut du patient</Label>
+            <Label htmlFor="patientStatus" className="text-[#334349]">Statut du patient</Label>
             <Select
               value={formData.patientStatus || ""}
               onValueChange={(value) => handleSelectChange("patientStatus", value)}
             >
-              <SelectTrigger id="patientStatus">
+              <SelectTrigger id="patientStatus" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                 <SelectValue placeholder="Sélectionner un statut" />
               </SelectTrigger>
               <SelectContent>
@@ -346,18 +348,19 @@ const MedicalInfoStep: React.FC<StepProps> = ({
           </div>
         </div>
         
-        <Separator />
+        <Separator className="bg-[#91BDC8]/50" />
         
         {/* Section Conditions médicales */}
         <div className="space-y-3">
-          <Label className="text-base">Conditions médicales</Label>
+          <Label className="text-base text-[#334349]">Conditions médicales</Label>
           <div className="flex gap-2">
             <Input
               value={newCondition}
               onChange={(e) => setNewCondition(e.target.value)}
               placeholder="Ajouter une condition médicale"
+              className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             />
-            <Button type="button" onClick={addCondition}>
+            <Button type="button" onClick={addCondition} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
               <Plus className="h-4 w-4" />
             </Button>
           </div>
@@ -382,14 +385,15 @@ const MedicalInfoStep: React.FC<StepProps> = ({
         
         {/* Section Allergies */}
         <div className="space-y-3">
-          <Label className="text-base">Allergies</Label>
+          <Label className="text-base text-[#334349]">Allergies</Label>
           <div className="flex gap-2">
             <Input
               value={newAllergy}
               onChange={(e) => setNewAllergy(e.target.value)}
               placeholder="Ajouter une allergie"
+              className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             />
-            <Button type="button" onClick={addAllergy}>
+            <Button type="button" onClick={addAllergy} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
               <Plus className="h-4 w-4" />
             </Button>
           </div>
@@ -414,25 +418,28 @@ const MedicalInfoStep: React.FC<StepProps> = ({
         
         {/* Section Médicaments */}
         <div className="space-y-3">
-          <Label className="text-base">Médicaments actuels</Label>
+          <Label className="text-base text-[#334349]">Médicaments actuels</Label>
           <div className="grid grid-cols-3 gap-2">
             <Input
               value={newMedication.name}
               onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
               placeholder="Nom du médicament"
+              className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             />
             <Input
               value={newMedication.dosage}
               onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
               placeholder="Dosage"
+              className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             />
             <div className="flex gap-2">
               <Input
                 value={newMedication.frequency}
                 onChange={(e) => setNewMedication({ ...newMedication, frequency: e.target.value })}
                 placeholder="Fréquence"
+                className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
               />
-              <Button type="button" onClick={addMedication}>
+              <Button type="button" onClick={addMedication} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
@@ -457,7 +464,7 @@ const MedicalInfoStep: React.FC<StepProps> = ({
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="medicalNotes">Notes médicales</Label>
+          <Label htmlFor="medicalNotes" className="text-[#334349]">Notes médicales</Label>
           <Textarea
             id="medicalNotes"
             name="medicalNotes"
@@ -465,16 +472,17 @@ const MedicalInfoStep: React.FC<StepProps> = ({
             onChange={handleChange}
             placeholder="Informations médicales supplémentaires"
             rows={3}
+            className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
           />
         </div>
       </div>
       
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onPrevious}>
+        <Button variant="outline" onClick={onPrevious} className="border-[#91BDC8] text-[#2980BA] hover:bg-[#619DB5] hover:text-white">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Précédent
         </Button>
-        <Button onClick={onNext}>
+        <Button onClick={onNext} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
           Suivant
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -483,7 +491,7 @@ const MedicalInfoStep: React.FC<StepProps> = ({
   );
 };
 
-// Étape 3 : Informations administratives
+
 const AdministrativeInfoStep: React.FC<StepProps> = ({ 
   onNext, 
   onPrevious, 
@@ -516,14 +524,14 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Informations administratives</h2>
-        <p className="text-sm text-gray-500">Complétez les données administratives du patient</p>
+        <h2 className="text-xl font-semibold text-[#021122]">Informations administratives</h2>
+        <p className="text-sm text-[#334349]">Complétez les données administratives du patient</p>
       </div>
       
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="patientId">Numéro de dossier</Label>
+            <Label htmlFor="patientId" className="text-[#334349]">Numéro de dossier</Label>
             <Input
               id="patientId"
               name="patientId"
@@ -531,26 +539,27 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
               onChange={handleChange}
               placeholder="Automatiquement généré si vide"
               disabled
+              className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             />
             <p className="text-xs text-gray-500">Ce numéro sera généré automatiquement</p>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="referringPhysician">Médecin référent <span className="text-red-500">*</span></Label>
+            <Label htmlFor="referringPhysician" className="text-[#334349]">Médecin référent <span className="text-red-500">*</span></Label>
             <Input
               id="referringPhysician"
               name="referringPhysician"
               value={formData.referringPhysician || ""}
               onChange={handleChange}
               placeholder="Nom du médecin référent"
-              className={errors.referringPhysician ? "border-red-500" : ""}
+              className={`border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5] ${errors.referringPhysician ? "border-red-500" : ""}`}
             />
             {errors.referringPhysician && <p className="text-xs text-red-500">{errors.referringPhysician}</p>}
           </div>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="insuranceInfo">Informations d'assurance</Label>
+          <Label htmlFor="insuranceInfo" className="text-[#334349]">Informations d'assurance</Label>
           <Textarea
             id="insuranceInfo"
             name="insuranceInfo"
@@ -558,20 +567,22 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
             onChange={handleChange}
             placeholder="Détails de l'assurance maladie"
             rows={3}
+            className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
           />
         </div>
         
         <div className="space-y-2">
-          <Label className="text-base">Consentements</Label>
+          <Label className="text-base text-[#334349]">Consentements</Label>
           <div className="space-y-3">
             <div className="flex items-start space-x-2">
               <Checkbox 
                 id="consentTreatment" 
                 checked={formData.consentTreatment || false}
                 onCheckedChange={(checked) => updateFormData({ ...formData, consentTreatment: checked })}
+                className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
               />
               <div className="grid gap-1.5 leading-none">
-                <Label htmlFor="consentTreatment" className="text-sm font-normal">
+                <Label htmlFor="consentTreatment" className="text-sm font-normal text-[#334349]">
                   Consentement au traitement
                 </Label>
                 <p className="text-xs text-gray-500">
@@ -585,9 +596,10 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
                 id="consentDataSharing" 
                 checked={formData.consentDataSharing || false}
                 onCheckedChange={(checked) => updateFormData({ ...formData, consentDataSharing: checked })}
+                className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
               />
               <div className="grid gap-1.5 leading-none">
-                <Label htmlFor="consentDataSharing" className="text-sm font-normal">
+                <Label htmlFor="consentDataSharing" className="text-sm font-normal text-[#334349]">
                   Partage des données médicales
                 </Label>
                 <p className="text-xs text-gray-500">
@@ -599,7 +611,7 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="administrativeNotes">Notes administratives</Label>
+          <Label htmlFor="administrativeNotes" className="text-[#334349]">Notes administratives</Label>
           <Textarea
             id="administrativeNotes"
             name="administrativeNotes"
@@ -607,16 +619,17 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
             onChange={handleChange}
             placeholder="Informations administratives supplémentaires"
             rows={3}
+            className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
           />
         </div>
       </div>
       
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onPrevious}>
+        <Button variant="outline" onClick={onPrevious} className="border-[#91BDC8] text-[#2980BA] hover:bg-[#619DB5] hover:text-white">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Précédent
         </Button>
-        <Button onClick={handleNext}>
+        <Button onClick={handleNext} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
           Suivant
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -625,7 +638,7 @@ const AdministrativeInfoStep: React.FC<StepProps> = ({
   );
 };
 
-// Étape 4 : Résumé et confirmation
+
 const SummaryStep: React.FC<StepProps> = ({ 
   onPrevious, 
   formData, 
@@ -641,13 +654,13 @@ const SummaryStep: React.FC<StepProps> = ({
     setSubmitError(null);
     
     try {
-      // Get the doctor info to use as reference
+
       const doctorInfo = AuthService.getDoctorInfo();
       if (!doctorInfo || !doctorInfo.doctor || !doctorInfo.doctor.id) {
         throw new Error("Information du médecin non disponible");
       }
       
-      // Prepare the data for API
+
       const patientData = {
         firstname: formData.firstName,
         lastname: formData.lastName,
@@ -666,7 +679,7 @@ const SummaryStep: React.FC<StepProps> = ({
         doctor_ref: doctorInfo.doctor.id
       };
       
-      // Send data to the API
+
       const newPatient = await PatientService.registerPatient(patientData);
       
       toast({
@@ -692,8 +705,8 @@ const SummaryStep: React.FC<StepProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Résumé et confirmation</h2>
-        <p className="text-sm text-gray-500">Vérifiez les informations du patient avant l'enregistrement</p>
+        <h2 className="text-xl font-semibold text-[#021122]">Résumé et confirmation</h2>
+        <p className="text-sm text-[#334349]">Vérifiez les informations du patient avant l'enregistrement</p>
       </div>
       
       {submitError && (
@@ -878,11 +891,11 @@ const SummaryStep: React.FC<StepProps> = ({
       </div>
       
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onPrevious}>
+        <Button variant="outline" onClick={onPrevious} className="border-[#91BDC8] text-[#2980BA] hover:bg-[#619DB5] hover:text-white">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Précédent
         </Button>
-        <Button onClick={handleSubmit} disabled={submitting}>
+        <Button onClick={handleSubmit} disabled={submitting} className="bg-[#2980BA] hover:bg-[#619DB5] text-white">
           {submitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -900,11 +913,11 @@ const SummaryStep: React.FC<StepProps> = ({
   );
 };
 
-// Composant principal pour l'enregistrement d'un patient
+
 const PatientRegistration = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Des valeurs par défaut peuvent être ajoutées ici
+
   });
   
   const steps = [
@@ -975,27 +988,27 @@ const PatientRegistration = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Enregistrer un nouveau patient</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-[#021122]">Enregistrer un nouveau patient</h1>
       </div>
       
-      <Card>
-        <CardHeader>
+      <Card className="border-[#91BDC8] shadow-md">
+        <CardHeader className="bg-gradient-to-r from-[#ECE7E3] to-[#FAFAFA]">
           <div className="flex items-center space-x-1">
             {steps.map((step, index) => (
               <React.Fragment key={index}>
                 <div
                   className={`py-1 px-3 rounded-full text-sm ${
                     currentStep === index + 1 
-                      ? "bg-blue-100 text-blue-700" 
+                      ? "bg-[#2980BA]/20 text-[#2980BA] font-medium" 
                       : currentStep > index + 1 
-                      ? "bg-blue-500 text-white" 
-                      : "bg-gray-100 text-gray-500"
+                      ? "bg-[#2980BA] text-white" 
+                      : "bg-[#ECE7E3] text-[#334349]"
                   }`}
                 >
                   {index + 1}. {step}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className="h-px w-8 bg-gray-200" />
+                  <div className="h-px w-8 bg-[#91BDC8]" />
                 )}
               </React.Fragment>
             ))}

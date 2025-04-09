@@ -230,8 +230,13 @@ const ActionHistoryPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Historique des actions</h1>
-        <Button onClick={fetchData} variant="outline" size="sm">
+        <h1 className="text-3xl font-bold tracking-tight text-[#021122]">Historique des actions</h1>
+        <Button 
+          onClick={fetchData} 
+          variant="outline" 
+          size="sm"
+          className="border-[#91BDC8] text-[#2980BA] hover:bg-[#ECE7E3]/20 hover:text-[#2980BA]"
+        >
           <RefreshCw className="mr-2 h-4 w-4" />
           Actualiser
         </Button>
@@ -245,20 +250,20 @@ const ActionHistoryPage: React.FC = () => {
         </Alert>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Filtres</CardTitle>
-          <CardDescription>Filtrer les actions par utilisateur, type ou période</CardDescription>
+      <Card className="border-[#91BDC8] shadow-md">
+        <CardHeader >
+          <CardTitle className="text-[#2980BA]">Filtres</CardTitle>
+          <CardDescription className="text-[#334349]">Filtrer les actions par utilisateur, type ou période</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-[#619DB5]" />
                 <Input
                   type="search"
                   placeholder="Rechercher..."
-                  className="pl-8"
+                  className="pl-8 border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -269,10 +274,10 @@ const ActionHistoryPage: React.FC = () => {
               value={selectedDoctor || "all"} 
               onValueChange={(value) => setSelectedDoctor(value === "all" ? null : value)}
             >
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[200px] border-[#91BDC8] text-[#334349] focus:ring-[#619DB5]">
                 <SelectValue placeholder="Médecin" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-[#91BDC8]">
                 <SelectItem value="all">Tous les médecins</SelectItem>
                 {uniqueDoctors.map((doctor) => (
                   <SelectItem key={doctor.id} value={doctor.id}>
@@ -286,10 +291,10 @@ const ActionHistoryPage: React.FC = () => {
               value={selectedActionType || "all"} 
               onValueChange={(value) => setSelectedActionType(value === "all" ? null : value)}
             >
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[200px] border-[#91BDC8] text-[#334349] focus:ring-[#619DB5]">
                 <SelectValue placeholder="Type d'action" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-[#91BDC8]">
                 <SelectItem value="all">Tous les types</SelectItem>
                 {actionTypes.map((type) => (
                   <SelectItem key={type} value={type}>
@@ -303,10 +308,10 @@ const ActionHistoryPage: React.FC = () => {
               value={selectedTimeRange || "all"} 
               onValueChange={(value) => setSelectedTimeRange(value === "all" ? null : value)}
             >
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[200px] border-[#91BDC8] text-[#334349] focus:ring-[#619DB5]">
                 <SelectValue placeholder="Période" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-[#91BDC8]">
                 <SelectItem value="all">Toutes les périodes</SelectItem>
                 <SelectItem value="today">Aujourd'hui</SelectItem>
                 <SelectItem value="yesterday">Hier</SelectItem>
@@ -315,17 +320,21 @@ const ActionHistoryPage: React.FC = () => {
               </SelectContent>
             </Select>
             
-            <Button variant="outline" onClick={resetFilters}>
+            <Button 
+              variant="outline" 
+              onClick={resetFilters}
+              className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+            >
               Réinitialiser
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Journaux d'activité</CardTitle>
-          <CardDescription>
+      <Card className="border-[#91BDC8] shadow-md">
+        <CardHeader >
+          <CardTitle className="text-[#2980BA]">Journaux d'activité</CardTitle>
+          <CardDescription className="text-[#334349]">
             {loading 
               ? "Chargement des données..."
               : `${filteredHistory.length} action${filteredHistory.length > 1 ? 's' : ''} trouvée${filteredHistory.length > 1 ? 's' : ''}`
@@ -335,55 +344,58 @@ const ActionHistoryPage: React.FC = () => {
         <CardContent>
           {loading ? (
             <div className="flex justify-center items-center py-10">
-              <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-              <span className="ml-3 text-lg">Chargement des données...</span>
+              <Loader2 className="h-10 w-10 animate-spin text-[#2980BA]" />
+              <span className="ml-3 text-lg text-[#334349]">Chargement des données...</span>
             </div>
           ) : filteredHistory.length === 0 ? (
-            <div className="text-center py-10 text-gray-500">
+            <div className="text-center py-10 text-[#334349]">
               Aucune action ne correspond à vos critères de recherche
             </div>
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border border-[#91BDC8]">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-[#ECE7E3]">
                   <TableRow>
-                    <TableHead className="w-[230px]">Horodatage</TableHead>
-                    <TableHead className="w-[300px]">Utilisateur</TableHead>
-                    <TableHead className="w-[330px]">Type d'action</TableHead>
-                    <TableHead>Description</TableHead>
+                    <TableHead className="w-[230px] text-[#334349]">Horodatage</TableHead>
+                    <TableHead className="w-[300px] text-[#334349]">Utilisateur</TableHead>
+                    <TableHead className="w-[330px] text-[#334349]">Type d'action</TableHead>
+                    <TableHead className="text-[#334349]">Description</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredHistory.map((action) => (
-                    <TableRow key={action._id}>
-                      <TableCell className="font-mono text-xs">
+                    <TableRow key={action._id} className="hover:bg-[#ECE7E3]/20">
+                      <TableCell className="font-mono text-xs text-[#334349]">
                         <div className="flex items-center">
-                          <Clock className="h-3 w-3 mr-1 text-gray-400" />
+                          <Clock className="h-3 w-3 mr-1 text-[#619DB5]" />
                           {formatDate(action.timestamp)}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-3">
-                          <div className="h-9 w-9 flex-shrink-0 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-medium">
+                          <div className="h-9 w-9 flex-shrink-0 rounded-full bg-[#2980BA]/20 text-[#2980BA] flex items-center justify-center text-xs font-medium">
                             {getUserInitials(action)}
                           </div>
                           <div className="min-w-0">
-                            <div className="font-medium truncate">
+                            <div className="font-medium truncate text-[#021122]">
                               {getUserName(action)}
                             </div>
-                            <div className="text-xs text-gray-500 truncate">
+                            <div className="text-xs text-[#619DB5] truncate">
                               {getUserIdentifier(action)}
                             </div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={getActionBadgeVariant(action.action_type)} className="px-2 py-1 whitespace-nowrap">
+                        <Badge 
+                          variant={getActionBadgeVariant(action.action_type)} 
+                          className="px-2 py-1 whitespace-nowrap bg-[#2980BA]/10 text-[#2980BA] hover:bg-[#2980BA]/20"
+                        >
                           {action.action_type}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <span className="text-sm line-clamp-2">
+                        <span className="text-sm line-clamp-2 text-[#334349]">
                           {formatDescription(action.description)}
                         </span>
                       </TableCell>

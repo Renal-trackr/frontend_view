@@ -113,31 +113,31 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
   const getStatusBadge = (status: WorkflowStatus) => {
     switch (status) {
       case WorkflowStatus.ACTIVE:
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Actif</Badge>;
+        return <Badge variant="outline" className="bg-[#91BDC8]/10 text-green-700 border-green-200">Actif</Badge>;
       case WorkflowStatus.PAUSED:
-        return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">En pause</Badge>;
+        return <Badge variant="outline" className="bg-[#ECE7E3]/20 text-amber-700 border-amber-200">En pause</Badge>;
       case WorkflowStatus.COMPLETED:
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Terminé</Badge>;
+        return <Badge variant="outline" className="bg-[#91BDC8]/10 text-[#2980BA] border-[#91BDC8]">Terminé</Badge>;
       default:
-        return <Badge variant="outline">Inconnu</Badge>;
+        return <Badge variant="outline" className="text-[#334349] border-[#91BDC8]">Inconnu</Badge>;
     }
   };
 
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Workflows assignés</h2>
-        <Button onClick={() => setShowCreateForm(true)}>
+        <h2 className="text-xl font-semibold text-[#021122]">Workflows assignés</h2>
+        <Button onClick={() => setShowCreateForm(true)} className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]">
           <Plus className="mr-2 h-4 w-4" />
           Créer un workflow
         </Button>
       </div>
 
       {workflows.length === 0 ? (
-        <Card>
+        <Card className="shadow-md">
           <CardHeader>
-            <CardTitle className="text-lg">Aucun workflow</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-lg text-[#2980BA]">Aucun workflow</CardTitle>
+            <CardDescription className="text-[#334349]">
               Aucun workflow n'est actuellement assigné à ce patient
             </CardDescription>
           </CardHeader>
@@ -146,12 +146,12 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
               <Button 
                 variant="outline" 
                 onClick={() => setShowCreateForm(true)}
-                className="mx-auto"
+                className="mx-auto border-[#91BDC8] text-[#2980BA] hover:bg-[#ECE7E3]/20"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Créer votre premier workflow
               </Button>
-              <p className="mt-4 text-sm text-gray-500">
+              <p className="mt-4 text-sm text-[#334349]">
                 Les workflows vous permettent d'automatiser le suivi patient (rappels, alertes, tâches)
               </p>
             </div>
@@ -160,12 +160,12 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {workflows.map((workflow) => (
-            <Card key={workflow._id}>
+            <Card key={workflow._id} className="shadow-md">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-lg">{workflow.name}</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-lg text-[#2980BA]">{workflow.name}</CardTitle>
+                    <CardDescription className="text-[#334349]">
                       {getStatusBadge(workflow.status)}
                       <span className="ml-2 text-xs">
                         Créé {formatDistanceToNow(new Date(workflow.created_at), { addSuffix: true, locale: fr })}
@@ -174,21 +174,22 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" className="text-[#334349] hover:bg-[#ECE7E3]/20 hover:text-[#2980BA]">
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleEditClick(workflow)}>
-                        <Edit className="mr-2 h-4 w-4" />
+                    <DropdownMenuContent align="end" className="border-[#91BDC8]">
+                      <DropdownMenuItem onClick={() => handleEditClick(workflow)} className="text-[#021122] focus:bg-[#ECE7E3]/20 focus:text-[#2980BA]">
+                        <Edit className="mr-2 h-4 w-4 text-[#2980BA]" />
                         Modifier
                       </DropdownMenuItem>
                       
                       {workflow.status === WorkflowStatus.ACTIVE && (
                         <DropdownMenuItem 
                           onClick={() => onUpdateStatus(workflow._id, WorkflowStatus.PAUSED)}
+                          className="text-[#021122] focus:bg-[#ECE7E3]/20 focus:text-[#2980BA]"
                         >
-                          <PauseCircle className="mr-2 h-4 w-4" />
+                          <PauseCircle className="mr-2 h-4 w-4 text-[#2980BA]" />
                           Mettre en pause
                         </DropdownMenuItem>
                       )}
@@ -196,8 +197,9 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
                       {workflow.status === WorkflowStatus.PAUSED && (
                         <DropdownMenuItem 
                           onClick={() => onUpdateStatus(workflow._id, WorkflowStatus.ACTIVE)}
+                          className="text-[#021122] focus:bg-[#ECE7E3]/20 focus:text-[#2980BA]"
                         >
-                          <PlayCircle className="mr-2 h-4 w-4" />
+                          <PlayCircle className="mr-2 h-4 w-4 text-[#2980BA]" />
                           Reprendre
                         </DropdownMenuItem>
                       )}
@@ -205,8 +207,9 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
                       {workflow.status !== WorkflowStatus.COMPLETED && (
                         <DropdownMenuItem 
                           onClick={() => onUpdateStatus(workflow._id, WorkflowStatus.COMPLETED)}
+                          className="text-[#021122] focus:bg-[#ECE7E3]/20 focus:text-[#2980BA]"
                         >
-                          <CheckCircle className="mr-2 h-4 w-4" />
+                          <CheckCircle className="mr-2 h-4 w-4 text-[#2980BA]" />
                           Marquer comme terminé
                         </DropdownMenuItem>
                       )}
@@ -223,11 +226,11 @@ const WorkflowList: React.FC<WorkflowListProps> = ({
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-[#334349] mb-4">
                   {workflow.description}
                 </p>
                 
-                <div className="flex items-center text-sm text-gray-500 space-x-3">
+                <div className="flex items-center text-sm text-[#619DB5] space-x-3">
                   <div className="flex items-center">
                     <LayoutList className="h-4 w-4 mr-1" />
                     <span>{(workflow.steps?.length || 0)} étapes</span>

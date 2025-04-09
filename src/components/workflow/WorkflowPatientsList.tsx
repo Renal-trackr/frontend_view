@@ -64,21 +64,21 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
       {patientIds.length > 1 ? (
         <div>
           <div className="flex items-center mb-1">
-            <Badge className="mr-2">{patientIds.length} patients</Badge>
+            <Badge className="mr-2 border-[#91BDC8] bg-[#91BDC8]/10 text-[#334349]">{patientIds.length} patients</Badge>
             <CollapsibleTrigger 
               onClick={() => setIsOpen(!isOpen)}
-              className="p-1 hover:bg-gray-100 rounded-full"
+              className="p-1 hover:bg-[#ECE7E3]/50 rounded-full"
             >
               {isOpen ? (
-                <ChevronUp className="h-4 w-4 text-gray-500" />
+                <ChevronUp className="h-4 w-4 text-[#619DB5]" />
               ) : (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-4 w-4 text-[#619DB5]" />
               )}
             </CollapsibleTrigger>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="ml-auto h-6 text-xs"
+              className="ml-auto h-6 text-xs text-[#2980BA] hover:text-[#619DB5] hover:bg-[#ECE7E3]/20"
               onClick={() => setShowAssignDialog(true)}
             >
               <Plus className="h-3 w-3 mr-1" />
@@ -88,16 +88,16 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
           
           <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <CollapsibleContent>
-              <div className="space-y-1 mt-2 pl-2 border-l-2 border-gray-200">
+              <div className="space-y-1 mt-2 pl-2 border-l-2 border-[#91BDC8]/30">
                 {patientIds.map(patientId => (
                   <Button
                     key={patientId}
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start h-7 text-xs"
+                    className="w-full justify-start h-7 text-xs text-[#334349] hover:text-[#2980BA] hover:bg-[#ECE7E3]/20"
                     onClick={() => onViewPatient(patientId)}
                   >
-                    <User className="h-3 w-3 mr-1" />
+                    <User className="h-3 w-3 mr-1 text-[#619DB5]" />
                     {getPatientName(patientId)}
                   </Button>
                 ))}
@@ -110,17 +110,17 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            className="flex items-center"
+            className="flex items-center text-[#334349] hover:text-[#2980BA] hover:bg-[#ECE7E3]/20"
             onClick={() => onViewPatient(patientIds[0])}
           >
-            <User className="h-4 w-4 mr-1" />
+            <User className="h-4 w-4 mr-1 text-[#619DB5]" />
             {getPatientName(patientIds[0])}
           </Button>
           
           <Button 
             variant="ghost" 
             size="sm" 
-            className="h-6 text-xs"
+            className="h-6 text-xs text-[#2980BA] hover:text-[#619DB5] hover:bg-[#ECE7E3]/20"
             onClick={() => setShowAssignDialog(true)}
           >
             <Plus className="h-3 w-3 mr-1" />
@@ -129,11 +129,11 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
         </div>
       ) : (
         <div className="flex justify-between items-center">
-          <span className="text-gray-500">Aucun patient</span>
+          <span className="text-[#334349]">Aucun patient</span>
           <Button 
             variant="ghost" 
             size="sm" 
-            className="h-6 text-xs"
+            className="h-6 text-xs text-[#2980BA] hover:text-[#619DB5] hover:bg-[#ECE7E3]/20"
             onClick={() => setShowAssignDialog(true)}
           >
             <Plus className="h-3 w-3 mr-1" />
@@ -144,10 +144,10 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
 
       {/* Dialog to assign more patients */}
       <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] bg-[#FAFAFA] border-[#91BDC8]">
           <DialogHeader>
-            <DialogTitle>Assigner des patients au workflow</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[#021122]">Assigner des patients au workflow</DialogTitle>
+            <DialogDescription className="text-[#334349]">
               Sélectionnez les patients à qui vous souhaitez assigner ce workflow.
             </DialogDescription>
           </DialogHeader>
@@ -156,19 +156,19 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
             {allPatients
               .filter(patient => !patientIds.includes(patient._id))
               .map(patient => (
-                <div key={patient._id} className="flex items-center py-2 border-b last:border-b-0">
+                <div key={patient._id} className="flex items-center py-2 border-b border-[#91BDC8]/20 last:border-b-0">
                   <Checkbox
                     checked={selectedPatients.includes(patient._id)}
                     onCheckedChange={() => togglePatientSelection(patient._id)}
-                    className="mr-3"
+                    className="mr-3 border-[#91BDC8] data-[state=checked]:bg-[#2980BA] data-[state=checked]:border-[#2980BA]"
                   />
                   <div className="flex items-center flex-1">
-                    <div className="h-6 w-6 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold mr-2 text-xs">
+                    <div className="h-6 w-6 rounded-full bg-[#2980BA]/10 flex items-center justify-center text-[#2980BA] font-bold mr-2 text-xs">
                       {patient.firstname[0]}{patient.lastname[0]}
                     </div>
                     <div>
-                      <p className="font-medium text-sm">{patient.firstname} {patient.lastname}</p>
-                      <p className="text-xs text-gray-500">Stade MRC: {patient.mrc_status || "N/A"}</p>
+                      <p className="font-medium text-sm text-[#021122]">{patient.firstname} {patient.lastname}</p>
+                      <p className="text-xs text-[#334349]">Stade MRC: {patient.mrc_status || "N/A"}</p>
                     </div>
                   </div>
                 </div>
@@ -176,10 +176,18 @@ const WorkflowPatientsList: React.FC<WorkflowPatientsListProps> = ({
           </div>
           
           <div className="flex justify-end space-x-2 mt-4">
-            <Button variant="outline" onClick={() => setShowAssignDialog(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowAssignDialog(false)}
+              className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+            >
               Annuler
             </Button>
-            <Button onClick={handleAssignPatients} disabled={selectedPatients.length === 0}>
+            <Button 
+              onClick={handleAssignPatients} 
+              disabled={selectedPatients.length === 0}
+              className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
+            >
               Assigner ({selectedPatients.length})
             </Button>
           </div>

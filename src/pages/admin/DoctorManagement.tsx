@@ -121,7 +121,7 @@ const DoctorManagement = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Gestion des médecins</h1>
+      <h1 className="text-3xl font-bold mb-6 text-[#021122]">Gestion des médecins</h1>
       
       {error && (
         <Alert variant="destructive" className="mb-6">
@@ -135,35 +135,37 @@ const DoctorManagement = () => {
       <div className="grid gap-8 lg:grid-cols-3">
         {/* Formulaire d'ajout (prend 1/3 de l'espace sur les grands écrans) */}
         <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Ajouter un médecin</CardTitle>
+          <Card className="shadow-md">
+            <CardHeader className="bg-[#FAFAFA]">
+              <CardTitle className="text-[#2980BA]">Ajouter un médecin</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <form onSubmit={handleAddDoctor}>
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstname">Prénom</Label>
+                    <Label htmlFor="firstname" className="text-[#334349]">Prénom</Label>
                     <Input 
                       id="firstname"
                       value={firstname}
                       onChange={(e) => setFirstname(e.target.value)}
                       disabled={submitting}
                       required
+                      className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastname">Nom</Label>
+                    <Label htmlFor="lastname" className="text-[#334349]">Nom</Label>
                     <Input 
                       id="lastname"
                       value={lastname}
                       onChange={(e) => setLastname(e.target.value)}
                       disabled={submitting}
                       required
+                      className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" className="text-[#334349]">Email</Label>
                     <Input 
                       id="email" 
                       type="email"
@@ -171,28 +173,34 @@ const DoctorManagement = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={submitting}
                       required
+                      className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="speciality">Spécialité</Label>
+                    <Label htmlFor="speciality" className="text-[#334349]">Spécialité</Label>
                     <Input 
                       id="speciality"
                       value={speciality}
                       disabled={true}
-                      className="bg-gray-50 text-gray-600"
+                      className="bg-[#ECE7E3] text-[#334349] border-[#91BDC8]"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phoneNumber">Téléphone</Label>
+                    <Label htmlFor="phoneNumber" className="text-[#334349]">Téléphone</Label>
                     <Input 
                       id="phoneNumber"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       disabled={submitting}
                       required
+                      className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
                     />
                   </div>
-                  <Button type="submit" disabled={submitting}>
+                  <Button 
+                    type="submit" 
+                    disabled={submitting}
+                    className="bg-[#2980BA] hover:bg-[#619DB5] text-white mt-2"
+                  >
                     {submitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -210,46 +218,48 @@ const DoctorManagement = () => {
         
         {/* Liste des médecins (prend 2/3 de l'espace sur les grands écrans) */}
         <div className="lg:col-span-2">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Liste des médecins</CardTitle>
+          <Card className="h-full shadow-md">
+            <CardHeader className="bg-[#FAFAFA]">
+              <CardTitle className="text-[#2980BA]">Liste des médecins</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
                 <div className="flex justify-center items-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                  <p className="ml-2">Chargement des médecins...</p>
+                  <Loader2 className="h-8 w-8 animate-spin text-[#2980BA]" />
+                  <p className="ml-2 text-[#334349]">Chargement des médecins...</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table className="w-full">
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[25%]">Nom</TableHead>
-                        <TableHead className="w-[30%]">Email</TableHead>
-                        <TableHead className="w-[20%]">Spécialité</TableHead>
-                        <TableHead className="w-[10%]">Statut</TableHead>
-                        <TableHead className="w-[15%] text-right">Actions</TableHead>
+                        <TableHead className="w-[25%] text-[#334349]">Nom</TableHead>
+                        <TableHead className="w-[30%] text-[#334349]">Email</TableHead>
+                        <TableHead className="w-[20%] text-[#334349]">Spécialité</TableHead>
+                        <TableHead className="w-[10%] text-[#334349]">Statut</TableHead>
+                        <TableHead className="w-[15%] text-right text-[#334349]">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {doctors.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="text-center py-8">
+                          <TableCell colSpan={5} className="text-center py-8 text-[#334349]">
                             Aucun médecin trouvé
                           </TableCell>
                         </TableRow>
                       ) : (
                         doctors.map((doctor) => (
-                          <TableRow key={doctor.id} className="hover:bg-gray-50">
-                            <TableCell className="font-medium">
+                          <TableRow key={doctor.id} className="hover:bg-[#ECE7E3]/20">
+                            <TableCell className="font-medium text-[#021122]">
                               {doctor.firstname} {doctor.lastname}
                             </TableCell>
-                            <TableCell>{doctor.email}</TableCell>
-                            <TableCell>{doctor.speciality}</TableCell>
+                            <TableCell className="text-[#334349]">{doctor.email}</TableCell>
+                            <TableCell className="text-[#334349]">{doctor.speciality}</TableCell>
                             <TableCell>
                               <span className={`px-2 py-1 rounded-full text-xs ${
-                                doctor.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                doctor.status === 'active' 
+                                  ? 'bg-[#619DB5]/20 text-[#2980BA]' 
+                                  : 'bg-red-100 text-red-800'
                               }`}>
                                 {doctor.status === 'active' ? 'Actif' : 'Inactif'}
                               </span>
@@ -260,6 +270,10 @@ const DoctorManagement = () => {
                                 size="sm"
                                 onClick={() => toggleDoctorStatus(doctor.id, doctor.status)}
                                 disabled={loading}
+                                className={doctor.status === 'active' 
+                                  ? 'border-red-300 text-red-700 hover:bg-red-50' 
+                                  : 'border-[#91BDC8] text-[#2980BA] hover:bg-[#ECE7E3]/20'
+                                }
                               >
                                 {doctor.status === 'active' ? 'Désactiver' : 'Activer'}
                               </Button>

@@ -68,101 +68,121 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Tableau de bord</h1>
-          <p className="text-muted-foreground">Vue d'ensemble du suivi des patients MRC</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[#021122]">Tableau de bord</h1>
+          <p className="text-[#619DB5]">Vue d'ensemble du suivi des patients MRC</p>
         </div>
         <div className="flex items-center space-x-2">
           <Select defaultValue="month">
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] border-[#91BDC8] focus:ring-[#619DB5]">
               <SelectValue placeholder="Période" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="border-[#91BDC8]">
               <SelectItem value="today">Aujourd'hui</SelectItem>
               <SelectItem value="week">Cette semaine</SelectItem>
               <SelectItem value="month">Ce mois</SelectItem>
               <SelectItem value="year">Cette année</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline">Exporter</Button>
+          <Button 
+            variant="outline" 
+            className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+          >
+            Exporter
+          </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
+        <Card className="border-[#91BDC8] shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Patients Total</CardTitle>
-            <User className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-[#334349]">Patients Total</CardTitle>
+            <User className="h-4 w-4 text-[#2980BA]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">127</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-2xl font-bold text-[#021122]">127</div>
+            <p className="text-xs text-[#619DB5] mt-1">
               +6 nouveaux ce mois
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-[#91BDC8] shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cas critiques</CardTitle>
-            <Heart className="h-4 w-4 text-destructive" />
+            <CardTitle className="text-sm font-medium text-[#334349]">Cas critiques</CardTitle>
+            <Heart className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-2xl font-bold text-[#021122]">8</div>
+            <p className="text-xs text-[#619DB5] mt-1">
               2 nouveaux cette semaine
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-[#91BDC8] shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Rendez-vous</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-[#334349]">Rendez-vous</CardTitle>
+            <Calendar className="h-4 w-4 text-[#2980BA]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-2xl font-bold text-[#021122]">24</div>
+            <p className="text-xs text-[#619DB5] mt-1">
               Pour cette semaine
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-[#91BDC8] shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Alertes</CardTitle>
-            <Bell className="h-4 w-4 text-warning-500" />
+            <CardTitle className="text-sm font-medium text-[#334349]">Alertes</CardTitle>
+            <Bell className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">7</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-2xl font-bold text-[#021122]">7</div>
+            <p className="text-xs text-[#619DB5] mt-1">
               3 nécessitent votre attention
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-[#91BDC8] shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Patients à risque</CardTitle>
-            <TrendingUp className="h-4 w-4 text-danger-500" />
+            <CardTitle className="text-sm font-medium text-[#334349]">Patients à risque</CardTitle>
+            <TrendingUp className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8.7%</div>
+            <div className="text-2xl font-bold text-[#021122]">8.7%</div>
             <div className="flex items-center pt-1">
-              <TrendingUp className="h-3 w-3 text-danger-500 mr-1" />
-              <span className="text-xs text-danger-500">+2.4% ce mois</span>
+              <TrendingUp className="h-3 w-3 text-red-500 mr-1" />
+              <span className="text-xs text-red-500">+2.4% ce mois</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Indicateurs de santé moyens</CardTitle>
-            <CardDescription>Évolution sur les 6 derniers mois</CardDescription>
+        <Card className="lg:col-span-2 shadow-md">
+          <CardHeader className="bg-[#FAFAFA]">
+            <CardTitle className="text-[#2980BA]">Indicateurs de santé moyens</CardTitle>
+            <CardDescription className="text-[#334349]">Évolution sur les 6 derniers mois</CardDescription>
           </CardHeader>
           <CardContent className="h-80">
             <Tabs defaultValue="créatinine">
-              <TabsList>
-                <TabsTrigger value="créatinine">Créatinine</TabsTrigger>
-                <TabsTrigger value="urée">Urée</TabsTrigger>
-                <TabsTrigger value="tgf">TFG</TabsTrigger>
+              <TabsList className="border-[#91BDC8] bg-[#ECE7E3]/50">
+                <TabsTrigger 
+                  value="créatinine"
+                  className="data-[state=active]:bg-white data-[state=active]:text-[#2980BA]"
+                >
+                  Créatinine
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="urée"
+                  className="data-[state=active]:bg-white data-[state=active]:text-[#2980BA]"
+                >
+                  Urée
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="tgf"
+                  className="data-[state=active]:bg-white data-[state=active]:text-[#2980BA]"
+                >
+                  TFG
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="créatinine" className="h-64 mt-4">
                 <ResponsiveContainer width="100%" height="100%">
@@ -201,10 +221,10 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Répartition des stades MRC</CardTitle>
-            <CardDescription>Distribution des patients par stade</CardDescription>
+        <Card className="shadow-md">
+          <CardHeader className="bg-[#FAFAFA]">
+            <CardTitle className="text-[#2980BA]">Répartition des stades MRC</CardTitle>
+            <CardDescription className="text-[#334349]">Distribution des patients par stade</CardDescription>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -231,33 +251,39 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Recommandations d'IA</CardTitle>
-            <CardDescription>Suggestions basées sur l'analyse des données patients</CardDescription>
+        <Card className="lg:col-span-2 shadow-md">
+          <CardHeader className="bg-[#FAFAFA]">
+            <CardTitle className="text-[#2980BA]">Recommandations d'IA</CardTitle>
+            <CardDescription className="text-[#334349]">Suggestions basées sur l'analyse des données patients</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {aiRecommendations.map(rec => (
-                <div key={rec.id} className="bg-secondary-50 p-4 rounded-lg border border-secondary-200">
+                <div key={rec.id} className="bg-[#ECE7E3]/30 p-4 rounded-lg">
                   <div className="flex items-start">
-                    <div className="p-2 rounded-full bg-secondary-100 mr-3">
-                      <Brain className="h-5 w-5 text-secondary-700" />
+                    <div className="p-2 rounded-full bg-[#2980BA]/20 mr-3">
+                      <Brain className="h-5 w-5 text-[#2980BA]" />
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
-                        <h4 className="font-medium">{rec.patient}</h4>
+                        <h4 className="font-medium text-[#021122]">{rec.patient}</h4>
                         <Badge 
                           variant={rec.urgence === "high" ? "destructive" : rec.urgence === "medium" ? "default" : "outline"}
+                          className={
+                            rec.urgence === "high" ? "" : 
+                            rec.urgence === "medium" ? "bg-[#2980BA] hover:bg-[#619DB5] text-white" : 
+                            "border-[#91BDC8] text-[#334349]"
+                          }
                         >
                           {rec.urgence === "high" ? "Urgent" : rec.urgence === "medium" ? "Moyen" : "Faible"}
                         </Badge>
                       </div>
-                      <p className="text-sm mt-1">{rec.recommendation}</p>
+                      <p className="text-sm mt-1 text-[#334349]">{rec.recommendation}</p>
                       <div className="flex items-center mt-2">
-                        <span className="text-xs text-muted-foreground mr-2">Confiance IA:</span>
-                        <Progress value={rec.confiance} className="h-2 flex-1" />
-                        <span className="ml-2 text-xs font-medium">{rec.confiance}%</span>
+                        <span className="text-xs text-[#619DB5] mr-2">Confiance IA:</span>
+                        <Progress value={rec.confiance} className="h-2 flex-1 bg-[#ECE7E3]" 
+                          indicatorClassName="bg-[#2980BA]" />
+                        <span className="ml-2 text-xs font-medium text-[#334349]">{rec.confiance}%</span>
                       </div>
                     </div>
                   </div>
@@ -266,121 +292,125 @@ const Dashboard = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <Button variant="outline" className="w-full">Voir toutes les recommandations</Button>
+            <Button variant="outline" className="w-full border-[#91BDC8] text-[#2980BA] hover:bg-[#ECE7E3]/20">
+              Voir toutes les recommandations
+            </Button>
           </CardFooter>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Adhérence aux traitements</CardTitle>
-            <CardDescription>Taux de suivi des recommandations</CardDescription>
+        <Card className="shadow-md">
+          <CardHeader className="bg-[#FAFAFA]">
+            <CardTitle className="text-[#2980BA]">Adhérence aux traitements</CardTitle>
+            <CardDescription className="text-[#334349]">Taux de suivi des recommandations</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {adherenceData.map((item, i) => (
               <div key={i}>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">{item.name}</span>
+                  <span className="text-sm font-medium text-[#334349]">{item.name}</span>
                   <span className={`text-xs font-medium ${
-                    item.adhérence >= 80 ? "text-success-600" : 
-                    item.adhérence >= 60 ? "text-warning-600" : "text-danger-600"
+                    item.adhérence >= 80 ? "text-green-600" : 
+                    item.adhérence >= 60 ? "text-amber-600" : "text-red-600"
                   }`}>{item.adhérence}%</span>
                 </div>
                 <Progress 
                   value={item.adhérence} 
-                  className={`h-2 ${
-                    item.adhérence >= 80 ? "bg-success-100" : 
-                    item.adhérence >= 60 ? "bg-warning-100" : "bg-danger-100"
+                  className={`h-2 bg-[#ECE7E3] ${
+                    item.adhérence >= 80 ? "[&>div]:bg-green-500" : 
+                    item.adhérence >= 60 ? "[&>div]:bg-amber-500" : "[&>div]:bg-red-500"
                   }`} 
                 />
               </div>
             ))}
           </CardContent>
           <CardFooter>
-            <Button variant="outline" className="w-full">Détails complets</Button>
+            <Button variant="outline" className="w-full border-[#91BDC8] text-[#2980BA] hover:bg-[#ECE7E3]/20">
+              Détails complets
+            </Button>
           </CardFooter>
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Patients à surveiller</CardTitle>
-          <CardDescription>Patients qui nécessitent une attention particulière</CardDescription>
+      <Card className="shadow-md">
+        <CardHeader className="bg-[#FAFAFA]">
+          <CardTitle className="text-[#2980BA]">Patients à surveiller</CardTitle>
+          <CardDescription className="text-[#334349]">Patients qui nécessitent une attention particulière</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead>
+              <thead className="bg-[#ECE7E3]/70">
                 <tr>
-                  <th className="text-left font-medium p-2">Patient</th>
-                  <th className="text-left font-medium p-2">Stade MRC</th>
-                  <th className="text-left font-medium p-2">Statut</th>
-                  <th className="text-left font-medium p-2">Dernier examen</th>
-                  <th className="text-left font-medium p-2">Prochain RDV</th>
+                  <th className="text-left font-medium p-2 text-[#334349]">Patient</th>
+                  <th className="text-left font-medium p-2 text-[#334349]">Stade MRC</th>
+                  <th className="text-left font-medium p-2 text-[#334349]">Statut</th>
+                  <th className="text-left font-medium p-2 text-[#334349]">Dernier examen</th>
+                  <th className="text-left font-medium p-2 text-[#334349]">Prochain RDV</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr className="hover:bg-[#ECE7E3]/20">
                   <td className="p-2">
                     <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-3">
-                        <span className="font-medium text-primary-700">JD</span>
+                      <div className="w-8 h-8 rounded-full bg-[#2980BA]/20 flex items-center justify-center mr-3">
+                        <span className="font-medium text-[#2980BA]">JD</span>
                       </div>
                       <div>
-                        <p className="font-medium">Jean Dupont</p>
-                        <p className="text-sm text-gray-500">62 ans</p>
+                        <p className="font-medium text-[#021122]">Jean Dupont</p>
+                        <p className="text-sm text-[#619DB5]">62 ans</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-2">Stage 4</td>
+                  <td className="p-2 text-[#334349]">Stade 4</td>
                   <td className="p-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-danger-100 text-danger-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                       Critique
                     </span>
                   </td>
-                  <td className="p-2">Il y a 2 jours</td>
-                  <td className="p-2">Demain, 10:30</td>
+                  <td className="p-2 text-[#334349]">Il y a 2 jours</td>
+                  <td className="p-2 text-[#334349]">Demain, 10:30</td>
                 </tr>
-                <tr>
+                <tr className="hover:bg-[#ECE7E3]/20">
                   <td className="p-2">
                     <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-3">
-                        <span className="font-medium text-primary-700">MM</span>
+                      <div className="w-8 h-8 rounded-full bg-[#2980BA]/20 flex items-center justify-center mr-3">
+                        <span className="font-medium text-[#2980BA]">MM</span>
                       </div>
                       <div>
-                        <p className="font-medium">Marie Martin</p>
-                        <p className="text-sm text-gray-500">58 ans</p>
+                        <p className="font-medium text-[#021122]">Marie Martin</p>
+                        <p className="text-sm text-[#619DB5]">58 ans</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-2">Stage 3B</td>
+                  <td className="p-2 text-[#334349]">Stade 3B</td>
                   <td className="p-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning-100 text-warning-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                       Surveillance
                     </span>
                   </td>
-                  <td className="p-2">Il y a 15 jours</td>
-                  <td className="p-2">03/07/2023</td>
+                  <td className="p-2 text-[#334349]">Il y a 15 jours</td>
+                  <td className="p-2 text-[#334349]">03/07/2023</td>
                 </tr>
-                <tr>
+                <tr className="hover:bg-[#ECE7E3]/20">
                   <td className="p-2">
                     <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-3">
-                        <span className="font-medium text-primary-700">RD</span>
+                      <div className="w-8 h-8 rounded-full bg-[#2980BA]/20 flex items-center justify-center mr-3">
+                        <span className="font-medium text-[#2980BA]">RD</span>
                       </div>
                       <div>
-                        <p className="font-medium">Robert Dubois</p>
-                        <p className="text-sm text-gray-500">70 ans</p>
+                        <p className="font-medium text-[#021122]">Robert Dubois</p>
+                        <p className="text-sm text-[#619DB5]">70 ans</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-2">Stage 3A</td>
+                  <td className="p-2 text-[#334349]">Stade 3A</td>
                   <td className="p-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning-100 text-warning-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                       Surveillance
                     </span>
                   </td>
-                  <td className="p-2">Il y a 5 jours</td>
-                  <td className="p-2">10/07/2023</td>
+                  <td className="p-2 text-[#334349]">Il y a 5 jours</td>
+                  <td className="p-2 text-[#334349]">10/07/2023</td>
                 </tr>
               </tbody>
             </table>

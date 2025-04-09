@@ -12,11 +12,11 @@ const WorkflowPatientsBadge: React.FC<WorkflowPatientsBadgeProps> = ({ workflow,
   const patientIds = getWorkflowPatientIds(workflow);
   
   if (patientIds.length === 0) {
-    return <span className="text-gray-500">Aucun patient</span>;
+    return <span className="text-[#334349]">Aucun patient</span>;
   }
   
   return (
-    <Badge variant="outline" className={className}>
+    <Badge variant="outline" className={`border-[#91BDC8] bg-[#91BDC8]/10 text-[#334349] ${className}`}>
       {patientIds.length} patient{patientIds.length > 1 ? 's' : ''}
     </Badge>
   );

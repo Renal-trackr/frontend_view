@@ -107,7 +107,7 @@ const WorkflowsPage = () => {
   const [showWorkflowDetails, setShowWorkflowDetails] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
 
-  // Calculate patient age from birth date
+
   const calculateAge = (dateOfBirth) => {
     if (!dateOfBirth) return "N/A";
     
@@ -125,19 +125,18 @@ const WorkflowsPage = () => {
     }
   };
 
-  // Load workflows and patients
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError("");
 
-        // Fetch all workflows
         const workflowsData = await WorkflowService.getWorkflows();
         setWorkflows(workflowsData);
         setFilteredWorkflows(workflowsData);
 
-        // Fetch all patients for references
+
         const patientsData = await PatientService.getPatients();
         setPatients(patientsData);
       } catch (err: any) {
@@ -156,16 +155,15 @@ const WorkflowsPage = () => {
     fetchData();
   }, []);
 
-  // Filter workflows when search term or status filter changes
+
   useEffect(() => {
     let filtered = workflows;
 
-    // Filter by status if not "all"
+
     if (statusFilter !== "all") {
       filtered = filtered.filter((workflow) => workflow.status === statusFilter);
     }
 
-    // Filter by search term if present
     if (searchTerm.trim() !== "") {
       const lowercasedSearch = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -182,7 +180,7 @@ const WorkflowsPage = () => {
       );
     }
 
-    // Dédupliquer les workflows - garantir que chaque workflow n'apparaît qu'une fois
+
     const uniqueWorkflows = [];
     const seenIds = new Set();
     
@@ -196,7 +194,7 @@ const WorkflowsPage = () => {
     setFilteredWorkflows(uniqueWorkflows);
   }, [searchTerm, statusFilter, workflows]);
 
-  // Filter patients by criteria
+
   const filterPatientsByCriteria = (criteria: string) => {
     if (criteria === 'all') {
       setFilteredPatients(patients);
@@ -209,7 +207,7 @@ const WorkflowsPage = () => {
     }
   };
 
-  // Get patient name from ID
+
   const getPatientName = (patientId: string) => {
     if (!patientId) return "Patient inconnu";
     
@@ -219,7 +217,7 @@ const WorkflowsPage = () => {
       : "Patient inconnu";
   };
 
-  // Get patient IDs from workflow
+
   const getPatientIDs = (workflow: Workflow): string[] => {
     if (workflow.patients_ids && workflow.patients_ids.length > 0) {
       return workflow.patients_ids;
@@ -231,11 +229,11 @@ const WorkflowsPage = () => {
     return [];
   };
 
-  // Workflow actions
+
   const handleCreateWorkflow = async (workflowData: Workflow) => {
     try {
       if (workflowType === 'template' && selectedPatients.length > 0) {
-        // Créer un workflow avec plusieurs patients
+
         const result = await WorkflowService.createWorkflow({
           ...workflowData,
           patients_ids: selectedPatients,
@@ -247,7 +245,7 @@ const WorkflowsPage = () => {
           description: `Le workflow a été assigné à ${selectedPatients.length} patient(s)`,
         });
       } else {
-        // Pour un seul patient
+
         const result = await WorkflowService.createWorkflow({
           ...workflowData,
           patients_ids: [workflowData.patient_id],
@@ -457,31 +455,34 @@ const WorkflowsPage = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Workflows</h1>
-        <Button onClick={() => setShowCreateForm(true)}>
+        <h1 className="text-3xl font-bold tracking-tight text-[#021122]">Workflows</h1>
+        <Button 
+          onClick={() => setShowCreateForm(true)}
+          className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
+        >
           <Plus className="mr-2 h-4 w-4" /> Nouveau workflow
         </Button>
       </div>
 
       <div className="flex items-center space-x-2">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-[#619DB5]" />
           <Input
             type="search"
             placeholder="Rechercher un workflow..."
-            className="pl-8"
+            className="pl-8 border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center border rounded-md pl-3">
-          <Filter className="h-4 w-4 text-gray-500" />
+        <div className="flex items-center border border-[#91BDC8] rounded-md pl-3">
+          <Filter className="h-4 w-4 text-[#619DB5]" />
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="border-0 w-[180px]">
               <SelectValue placeholder="Filtrer par statut" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="border-[#91BDC8]">
               <SelectItem value="all">Tous les statuts</SelectItem>
               <SelectItem value={WorkflowStatus.ACTIVE}>Actifs</SelectItem>
               <SelectItem value={WorkflowStatus.PAUSED}>En pause</SelectItem>
@@ -492,7 +493,7 @@ const WorkflowsPage = () => {
       </div>
 
       {error && (
-        <Card className="bg-destructive/10 text-destructive">
+        <Card className="bg-red-50 border border-red-200 text-red-800">
           <CardContent className="p-4 flex items-start">
             <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
             <div>
@@ -503,10 +504,10 @@ const WorkflowsPage = () => {
         </Card>
       )}
 
-      <Card>
+      <Card className="shadow-md">
         <CardHeader>
-          <CardTitle>Liste des workflows</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-[#2980BA]">Liste des workflows</CardTitle>
+          <CardDescription className="text-[#334349]">
             {loading
               ? "Chargement des workflows..."
               : filteredWorkflows.length === 0
@@ -519,20 +520,20 @@ const WorkflowsPage = () => {
         <CardContent>
           {loading ? (
             <div className="flex justify-center items-center py-10">
-              <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-              <span className="ml-3 text-lg">Chargement des workflows...</span>
+              <Loader2 className="h-10 w-10 animate-spin text-[#2980BA]" />
+              <span className="ml-3 text-lg text-[#334349]">Chargement des workflows...</span>
             </div>
           ) : filteredWorkflows.length === 0 ? (
             <div className="text-center py-10">
-              <p>Aucun workflow trouvé.</p>
+              <p className="text-[#334349]">Aucun workflow trouvé.</p>
               {searchTerm || statusFilter !== "all" ? (
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-[#619DB5] text-sm mt-1">
                   Essayez de modifier vos filtres.
                 </p>
               ) : (
                 <Button
                   variant="outline"
-                  className="mt-3"
+                  className="mt-3 border-[#91BDC8] text-[#2980BA] hover:bg-[#ECE7E3]/20"
                   onClick={() => setShowCreateForm(true)}
                 >
                   <Plus className="mr-2 h-4 w-4" /> Créer un workflow
@@ -542,26 +543,26 @@ const WorkflowsPage = () => {
           ) : (
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-[#ECE7E3]/50">
                   <TableRow>
-                    <TableHead>Nom</TableHead>
-                    <TableHead>Statut</TableHead>
-                    <TableHead>Patients</TableHead>
-                    <TableHead>Étapes</TableHead>
-                    <TableHead>Dernière mise à jour</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-[#334349]">Nom</TableHead>
+                    <TableHead className="text-[#334349]">Statut</TableHead>
+                    <TableHead className="text-[#334349]">Patients</TableHead>
+                    <TableHead className="text-[#334349]">Étapes</TableHead>
+                    <TableHead className="text-[#334349]">Dernière mise à jour</TableHead>
+                    <TableHead className="text-right text-[#334349]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredWorkflows.map((workflow) => (
                     <TableRow
                       key={workflow._id}
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer hover:bg-[#ECE7E3]/10"
                       onClick={() => handleViewWorkflowDetails(workflow)}
                     >
                       <TableCell className="font-medium">
-                        {workflow.name}
-                        <p className="text-xs text-gray-500 truncate max-w-xs">
+                        <span className="text-[#021122]">{workflow.name}</span>
+                        <p className="text-xs text-[#619DB5] truncate max-w-xs">
                           {workflow.description}
                         </p>
                       </TableCell>
@@ -570,18 +571,18 @@ const WorkflowsPage = () => {
                         {(() => {
                           const patientIds = getPatientIDs(workflow);
                           return patientIds.length > 0 ? (
-                            <Badge variant="outline">
+                            <Badge variant="outline" className="border-[#91BDC8] bg-[#91BDC8]/10 text-[#334349]">
                               {patientIds.length} patient{patientIds.length > 1 ? 's' : ''}
                             </Badge>
                           ) : (
-                            <span className="text-gray-500">Aucun</span>
+                            <span className="text-[#334349]">Aucun</span>
                           );
                         })()}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-[#334349]">
                         {workflow.steps?.length || 0} étape(s)
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-[#619DB5]">
                         {workflow.updated_at
                           ? formatDistanceToNow(new Date(workflow.updated_at), {
                               addSuffix: true,
@@ -638,10 +639,10 @@ const WorkflowsPage = () => {
 
       {/* Create Workflow Dialog */}
       <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
-        <DialogContent className="sm:max-w-[900px]">
+        <DialogContent className="sm:max-w-[900px] bg-[#FAFAFA] border-[#91BDC8]">
           <DialogHeader>
-            <DialogTitle>Créer un nouveau workflow</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[#021122]">Créer un nouveau workflow</DialogTitle>
+            <DialogDescription className="text-[#334349]">
               Définissez les détails du workflow et ajoutez des étapes
             </DialogDescription>
           </DialogHeader>
@@ -653,30 +654,30 @@ const WorkflowsPage = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <Button
                       variant="outline"
-                      className={`h-24 ${
+                      className={`h-24 border-[#91BDC8] hover:bg-[#ECE7E3]/20 ${
                         workflowType === "patient"
-                          ? "border-primary-500 ring-2 ring-primary-200"
+                          ? "ring-2 ring-[#2980BA]/20 border-[#2980BA]"
                           : ""
                       }`}
                       onClick={() => setWorkflowType("patient")}
                     >
                       <div className="flex flex-col items-center">
-                        <User className="h-8 w-8 mb-2" />
-                        <span>Workflow pour un patient spécifique</span>
+                        <User className="h-8 w-8 mb-2 text-[#2980BA]" />
+                        <span className="text-[#334349]">Workflow pour un patient spécifique</span>
                       </div>
                     </Button>
                     <Button
                       variant="outline"
-                      className={`h-24 ${
+                      className={`h-24 border-[#91BDC8] hover:bg-[#ECE7E3]/20 ${
                         workflowType === "template"
-                          ? "border-primary-500 ring-2 ring-primary-200"
+                          ? "ring-2 ring-[#2980BA]/20 border-[#2980BA]"
                           : ""
                       }`}
                       onClick={() => setWorkflowType("template")}
                     >
                       <div className="flex flex-col items-center">
-                        <Users className="h-8 w-8 mb-2" />
-                        <span>Workflow par critères (stade MRC, etc.)</span>
+                        <Users className="h-8 w-8 mb-2 text-[#2980BA]" />
+                        <span className="text-[#334349]">Workflow par critères (stade MRC, etc.)</span>
                       </div>
                     </Button>
                   </div>
@@ -685,31 +686,31 @@ const WorkflowsPage = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <Button
                       variant="outline"
-                      className={`h-16 ${
+                      className={`h-16 border-[#91BDC8] hover:bg-[#ECE7E3]/20 ${
                         workflowCreationMode === "standard"
-                          ? "border-primary-500 ring-2 ring-primary-200"
+                          ? "ring-2 ring-[#2980BA]/20 border-[#2980BA]"
                           : ""
                       }`}
                       onClick={() => setWorkflowCreationMode("standard")}
                     >
                       <div className="flex flex-col items-center">
-                        <LayoutList className="h-5 w-5 mb-1" />
-                        <span>Workflow standard</span>
+                        <LayoutList className="h-5 w-5 mb-1 text-[#2980BA]" />
+                        <span className="text-[#334349]">Workflow standard</span>
                       </div>
                     </Button>
 
                     <Button
                       variant="outline"
-                      className={`h-16 ${
+                      className={`h-16 border-[#91BDC8] hover:bg-[#ECE7E3]/20 ${
                         workflowCreationMode === "simplified"
-                          ? "border-primary-500 ring-2 ring-primary-200"
+                          ? "ring-2 ring-[#2980BA]/20 border-[#2980BA]"
                           : ""
                       }`}
                       onClick={() => setWorkflowCreationMode("simplified")}
                     >
                       <div className="flex flex-col items-center">
-                        <Beaker className="h-5 w-5 mb-1" />
-                        <span>Workflow basé sur test</span>
+                        <Beaker className="h-5 w-5 mb-1 text-[#2980BA]" />
+                        <span className="text-[#334349]">Workflow basé sur test</span>
                       </div>
                     </Button>
                   </div>
@@ -717,24 +718,24 @@ const WorkflowsPage = () => {
                   {/* Patient selection section */}
                   {workflowType === "patient" ? (
                     <div className="space-y-4">
-                      <Label>Sélectionnez un patient</Label>
+                      <Label className="text-[#334349]">Sélectionnez un patient</Label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {patients.map((patient) => (
                           <Button
                             key={patient._id}
                             variant="outline"
-                            className="flex justify-start items-center h-auto py-3 px-4"
+                            className="flex justify-start items-center h-auto py-3 px-4 border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
                             onClick={() => startCreateWorkflow(patient._id)}
                           >
-                            <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold mr-3">
+                            <div className="h-8 w-8 rounded-full bg-[#2980BA]/10 flex items-center justify-center text-[#2980BA] font-bold mr-3">
                               {patient.firstname[0]}
                               {patient.lastname[0]}
                             </div>
                             <div className="text-left">
-                              <p className="font-medium">
+                              <p className="font-medium text-[#021122]">
                                 {patient.firstname} {patient.lastname}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-[#619DB5]">
                                 Stade MRC: {patient.mrc_status || "N/A"}
                               </p>
                             </div>
@@ -745,7 +746,7 @@ const WorkflowsPage = () => {
                   ) : (
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <Label>Filtrer les patients par critères</Label>
+                        <Label className="text-[#334349]">Filtrer les patients par critères</Label>
                         <Select
                           value={criteriaFilter}
                           onValueChange={(value) => {
@@ -753,10 +754,10 @@ const WorkflowsPage = () => {
                             filterPatientsByCriteria(value);
                           }}
                         >
-                          <SelectTrigger className="w-[200px]">
+                          <SelectTrigger className="w-[200px] border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                             <SelectValue placeholder="Sélectionner un critère" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="border-[#91BDC8]">
                             <SelectItem value="all">Tous les patients</SelectItem>
                             <SelectItem value="stage_1">Stade MRC 1</SelectItem>
                             <SelectItem value="stage_2">Stade MRC 2</SelectItem>
@@ -768,9 +769,9 @@ const WorkflowsPage = () => {
                         </Select>
                       </div>
 
-                      <div className="border rounded-md p-4">
+                      <div className="border border-[#91BDC8] rounded-md p-4">
                         <div className="flex justify-between items-center mb-4">
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-[#334349]">
                             {filteredPatients.length} patient(s) correspondent à
                             vos critères
                           </p>
@@ -778,6 +779,7 @@ const WorkflowsPage = () => {
                             <Button
                               variant="outline"
                               size="sm"
+                              className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
                               onClick={() => toggleSelectAllPatients(true)}
                             >
                               Sélectionner tous
@@ -785,6 +787,7 @@ const WorkflowsPage = () => {
                             <Button
                               variant="outline"
                               size="sm"
+                              className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
                               onClick={() => toggleSelectAllPatients(false)}
                             >
                               Désélectionner tous
@@ -796,26 +799,26 @@ const WorkflowsPage = () => {
                           {filteredPatients.map((patient) => (
                             <div
                               key={patient._id}
-                              className="flex items-center py-2 border-b last:border-b-0"
+                              className="flex items-center py-2 border-b border-[#91BDC8]/20 last:border-b-0"
                             >
                               <Checkbox
                                 checked={selectedPatients.includes(patient._id)}
                                 onCheckedChange={() =>
                                   togglePatientSelection(patient._id)
                                 }
-                                className="mr-3"
+                                className="mr-3 border-[#91BDC8] data-[state=checked]:bg-[#2980BA] data-[state=checked]:border-[#2980BA]"
                               />
                               <div className="flex items-center flex-1">
-                                <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold mr-2">
+                                <div className="h-8 w-8 rounded-full bg-[#2980BA]/10 flex items-center justify-center text-[#2980BA] font-bold mr-2">
                                   {patient.firstname[0]}
                                   {patient.lastname[0]}
                                 </div>
                                 <div>
-                                  <p className="font-medium">
+                                  <p className="font-medium text-[#021122]">
                                     {patient.firstname} {patient.lastname}
                                   </p>
-                                  <div className="text-xs text-gray-500 flex items-center gap-2">
-                                    <Badge variant="outline">
+                                  <div className="text-xs text-[#619DB5] flex items-center gap-2">
+                                    <Badge variant="outline" className="border-[#91BDC8]">
                                       Stade MRC {patient.mrc_status || "N/A"}
                                     </Badge>
                                     <span>
@@ -830,7 +833,7 @@ const WorkflowsPage = () => {
                       </div>
 
                       <Button
-                        className="w-full"
+                        className="w-full bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
                         disabled={selectedPatients.length === 0}
                         onClick={() => setShowCriteria(true)}
                       >
@@ -894,10 +897,10 @@ const WorkflowsPage = () => {
 
       {/* Edit Workflow Dialog */}
       <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
-        <DialogContent className="sm:max-w-[800px]">
+        <DialogContent className="sm:max-w-[800px] bg-[#FAFAFA] border-[#91BDC8]">
           <DialogHeader>
-            <DialogTitle>Modifier le workflow</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[#021122]">Modifier le workflow</DialogTitle>
+            <DialogDescription className="text-[#334349]">
               Modifiez les détails du workflow ou les étapes
             </DialogDescription>
           </DialogHeader>
@@ -919,23 +922,23 @@ const WorkflowsPage = () => {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-[#FAFAFA] border-[#91BDC8]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-[#021122]">Confirmer la suppression</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#334349]">
               Êtes-vous sûr de vouloir supprimer ce workflow ? Cette action ne
               peut pas être annulée.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setWorkflowToDelete(null)}>
+            <AlertDialogCancel className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20">
               Annuler
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() =>
                 workflowToDelete && handleDeleteWorkflow(workflowToDelete)
               }
-              className="bg-destructive text-destructive-foreground"
+              className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
             >
               Supprimer
             </AlertDialogAction>
@@ -945,10 +948,10 @@ const WorkflowsPage = () => {
 
       {/* Workflow Details Dialog */}
       <Dialog open={showWorkflowDetails} onOpenChange={setShowWorkflowDetails}>
-        <DialogContent className="sm:max-w-[900px]">
+        <DialogContent className="sm:max-w-[900px] bg-[#FAFAFA] border-[#91BDC8]">
           <DialogHeader>
-            <DialogTitle>Détails du workflow</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-[#021122]">Détails du workflow</DialogTitle>
+            <DialogDescription className="text-[#334349]">
               Informations détaillées sur le workflow et ses patients associés.
             </DialogDescription>
           </DialogHeader>
@@ -957,13 +960,13 @@ const WorkflowsPage = () => {
               <div className="space-y-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h2 className="text-xl font-semibold">{selectedWorkflow.name}</h2>
-                    <p className="text-sm text-gray-500">{selectedWorkflow.description}</p>
+                    <h2 className="text-xl font-semibold text-[#021122]">{selectedWorkflow.name}</h2>
+                    <p className="text-sm text-[#619DB5]">{selectedWorkflow.description}</p>
                   </div>
                   <div>{getStatusBadge(selectedWorkflow.status)}</div>
                 </div>
                 
-                <div className="flex gap-2 text-sm text-gray-500">
+                <div className="flex gap-2 text-sm text-[#334349]">
                   <span>Créé le: {new Date(selectedWorkflow.created_at).toLocaleDateString('fr-FR')}</span>
                   {selectedWorkflow.updated_at && (
                     <span>• Mis à jour: {formatDistanceToNow(new Date(selectedWorkflow.updated_at), {
@@ -975,51 +978,56 @@ const WorkflowsPage = () => {
               </div>
               
               <div>
-                <h3 className="text-lg font-medium mb-2">Patients assignés</h3>
+                <h3 className="text-lg font-medium mb-2 text-[#021122]">Patients assignés</h3>
                 {(() => {
                   const patientIds = getPatientIDs(selectedWorkflow);
                   return patientIds.length > 0 ? (
-                    <div className="border rounded-md divide-y">
+                    <div className="border border-[#91BDC8] rounded-md divide-y divide-[#91BDC8]/20">
                       {patientIds.filter(Boolean).map(patientId => (
                         <div key={patientId} className="flex items-center justify-between p-3">
                           <div className="flex items-center">
-                            <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold mr-3">
+                            <div className="h-8 w-8 rounded-full bg-[#2980BA]/10 flex items-center justify-center text-[#2980BA] font-bold mr-3">
                               {getPatientName(patientId).split(' ').map(part => part[0]).join('')}
                             </div>
-                            <span>{getPatientName(patientId)}</span>
+                            <span className="text-[#334349]">{getPatientName(patientId)}</span>
                           </div>
-                          <Button variant="ghost" size="sm" onClick={() => handleViewPatient(patientId)}>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleViewPatient(patientId)}
+                            className="text-[#2980BA] hover:bg-[#ECE7E3]/20"
+                          >
                             <Eye className="h-4 w-4 mr-1" /> Voir
                           </Button>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500">Aucun patient assigné</p>
+                    <p className="text-[#334349]">Aucun patient assigné</p>
                   );
                 })()}
               </div>
 
               <div>
-                <h3 className="text-lg font-medium mb-2">Étapes du workflow ({selectedWorkflow.steps?.length || 0})</h3>
+                <h3 className="text-lg font-medium mb-2 text-[#021122]">Étapes du workflow ({selectedWorkflow.steps?.length || 0})</h3>
                 {selectedWorkflow.steps && selectedWorkflow.steps.length > 0 ? (
                   <div className="space-y-3">
                     {(selectedWorkflow.steps as WorkflowStep[]).map((step, index) => (
-                      <div key={index} className="border rounded-md p-3">
+                      <div key={index} className="border border-[#91BDC8]/30 rounded-md p-3 bg-white hover:bg-[#ECE7E3]/10">
                         <div className="flex items-center">
-                          <div className="bg-primary-50 text-primary-600 rounded-full w-6 h-6 flex items-center justify-center mr-2">
+                          <div className="bg-[#91BDC8]/20 text-[#2980BA] rounded-full w-6 h-6 flex items-center justify-center mr-2">
                             {index + 1}
                           </div>
                           <div>
-                            <p className="font-medium">{step.name}</p>
-                            <p className="text-sm text-gray-500">{step.type}</p>
+                            <p className="font-medium text-[#021122]">{step.name}</p>
+                            <p className="text-sm text-[#619DB5]">{step.type}</p>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500">Aucune étape définie</p>
+                  <p className="text-[#334349]">Aucune étape définie</p>
                 )}
               </div>
 
@@ -1027,6 +1035,7 @@ const WorkflowsPage = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => setShowWorkflowDetails(false)}
+                  className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
                 >
                   Fermer
                 </Button>
@@ -1035,6 +1044,7 @@ const WorkflowsPage = () => {
                     setShowWorkflowDetails(false);
                     handleEditClick(selectedWorkflow);
                   }}
+                  className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
                 >
                   <Edit className="h-4 w-4 mr-2" /> Modifier
                 </Button>

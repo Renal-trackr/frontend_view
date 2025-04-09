@@ -136,16 +136,19 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="patientId">Patient</Label>
+        <Label htmlFor="patientId" className="text-[#334349]">Patient</Label>
         <Select
           value={formData.patientId}
           onValueChange={(value) => handleSelectChange("patientId", value)}
           disabled={!!selectedPatientId}
         >
-          <SelectTrigger id="patientId" className={errors.patientId ? "border-red-500" : ""}>
+          <SelectTrigger 
+            id="patientId" 
+            className={`border-[#91BDC8] focus:ring-[#619DB5] ${errors.patientId ? "border-red-500" : ""}`}
+          >
             <SelectValue placeholder="Sélectionner un patient" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="border-[#91BDC8]">
             {patients.map((patient) => (
               <SelectItem key={patient.id} value={patient.id}>
                 {patient.name}
@@ -158,29 +161,34 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="date">Date</Label>
+          <Label htmlFor="date" className="text-[#334349]">Date</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !date && "text-muted-foreground",
+                  "w-full justify-start text-left font-normal border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20",
+                  !date && "text-[#619DB5]",
                   errors.date ? "border-red-500" : ""
                 )}
                 disabled={disableDateSelection}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                <CalendarIcon className="mr-2 h-4 w-4 text-[#2980BA]" />
                 {date ? format(date, "PPP", { locale: fr }) : <span>Sélectionner une date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0 border-[#91BDC8]" align="start">
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
                 initialFocus
                 locale={fr}
+                className="border-[#91BDC8]"
+                classNames={{
+                  day_selected: "bg-[#2980BA] text-white hover:bg-[#619DB5]",
+                  day_today: "bg-[#ECE7E3] text-[#334349]"
+                }}
               />
             </PopoverContent>
           </Popover>
@@ -264,10 +272,18 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       </div>
       
       <div className="flex justify-end space-x-2 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={onCancel}
+          className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+        >
           Annuler
         </Button>
-        <Button type="submit">
+        <Button 
+          type="submit"
+          className="bg-[#2980BA] hover:bg-[#619DB5] text-white"
+        >
           {initialAppointment.id ? "Mettre à jour" : "Créer le rendez-vous"}
         </Button>
       </div>

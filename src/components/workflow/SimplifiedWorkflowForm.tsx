@@ -81,9 +81,9 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-6">
         {isTemplate && (
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+          <div className="bg-[#91BDC8]/10 border border-[#91BDC8] rounded-md p-4 mb-6">
             <div className="flex items-start">
-              <Users className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+              <Users className="h-5 w-5 text-[#2980BA] mr-2 mt-0.5" />
               <div>
                 <h3 className="font-medium text-blue-800">Workflow à assigner à plusieurs patients</h3>
                 <p className="text-sm text-blue-600">
@@ -95,39 +95,40 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
         )}
         
         <div className="space-y-4">
-          <Alert>
-            <Beaker className="h-4 w-4" />
-            <AlertTitle>Workflow simplifié</AlertTitle>
-            <AlertDescription>
+          <Alert className="border-[#91BDC8] bg-[#91BDC8]/10">
+            <Beaker className="h-4 w-4 text-[#2980BA]" />
+            <AlertTitle className="text-[#021122]">Workflow simplifié</AlertTitle>
+            <AlertDescription className="text-[#334349]">
               Ce formulaire vous permet de créer rapidement un workflow basé sur un test médical et des seuils d'alerte.
             </AlertDescription>
           </Alert>
           
           <div className="space-y-2">
-            <Label htmlFor="name">Nom du workflow</Label>
+            <Label htmlFor="name" className="text-[#334349]">Nom du workflow</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Suivi du taux d'urée"
               required
+              className="border-[#91BDC8] focus-visible:ring-[#619DB5] focus:border-[#2980BA]"
             />
           </div>
         </div>
         
-        <Separator />
+        <Separator className="bg-[#91BDC8]/30" />
         
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Configuration du test</h3>
+          <h3 className="text-lg font-medium text-[#021122]">Configuration du test</h3>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="test-type">Type de test</Label>
+              <Label htmlFor="test-type" className="text-[#334349]">Type de test</Label>
               <Select value={testType} onValueChange={setTestType}>
-                <SelectTrigger id="test-type">
+                <SelectTrigger id="test-type" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                   <SelectValue placeholder="Sélectionner le type de test" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="border-[#91BDC8]">
                   <SelectItem value="urea">Urée</SelectItem>
                   <SelectItem value="creatinine">Créatinine</SelectItem>
                   <SelectItem value="egfr">DFG (eGFR)</SelectItem>
@@ -138,7 +139,7 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="delay-days">Délai avant le test (jours)</Label>
+              <Label htmlFor="delay-days" className="text-[#334349]">Délai avant le test (jours)</Label>
               <Input
                 id="delay-days"
                 type="number"
@@ -146,35 +147,37 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
                 value={delayDays}
                 onChange={(e) => setDelayDays(e.target.value)}
                 required
+                className="border-[#91BDC8] focus-visible:ring-[#619DB5] focus:border-[#2980BA]"
               />
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="test-description">Description du test</Label>
+            <Label htmlFor="test-description" className="text-[#334349]">Description du test</Label>
             <Textarea
               id="test-description"
               value={testDescription}
               onChange={(e) => setTestDescription(e.target.value)}
               placeholder="Instructions ou détails sur le test à réaliser"
               rows={2}
+              className="border-[#91BDC8] focus-visible:ring-[#619DB5] focus:border-[#2980BA]"
             />
           </div>
         </div>
         
-        <Separator />
+        <Separator className="bg-[#91BDC8]/30" />
         
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">Condition d'alerte</h3>
+          <h3 className="text-lg font-medium text-[#021122]">Condition d'alerte</h3>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="alert-parameter">Paramètre</Label>
+              <Label htmlFor="alert-parameter" className="text-[#334349]">Paramètre</Label>
               <Select value={alertParameter} onValueChange={setAlertParameter}>
-                <SelectTrigger id="alert-parameter">
+                <SelectTrigger id="alert-parameter" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                   <SelectValue placeholder="Sélectionner le paramètre" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="border-[#91BDC8]">
                   <SelectItem value="value">Valeur</SelectItem>
                   <SelectItem value="ratio">Ratio</SelectItem>
                   <SelectItem value="concentration">Concentration</SelectItem>
@@ -183,12 +186,12 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="alert-operator">Condition</Label>
+              <Label htmlFor="alert-operator" className="text-[#334349]">Condition</Label>
               <Select value={alertOperator} onValueChange={setAlertOperator}>
-                <SelectTrigger id="alert-operator">
+                <SelectTrigger id="alert-operator" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                   <SelectValue placeholder="Sélectionner l'opérateur" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="border-[#91BDC8]">
                   <SelectItem value=">">Supérieur à</SelectItem>
                   <SelectItem value="<">Inférieur à</SelectItem>
                   <SelectItem value="==">Égal à</SelectItem>
@@ -199,7 +202,7 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="alert-threshold">Seuil</Label>
+              <Label htmlFor="alert-threshold" className="text-[#334349]">Seuil</Label>
               <div className="flex">
                 <Input
                   id="alert-threshold"
@@ -207,14 +210,14 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
                   step="0.01"
                   value={alertThreshold}
                   onChange={(e) => setAlertThreshold(e.target.value)}
-                  className="flex-1 rounded-r-none"
+                  className="flex-1 rounded-r-none border-[#91BDC8] focus-visible:ring-[#619DB5] focus:border-[#2980BA]"
                   required
                 />
                 <Select value={alertUnit} onValueChange={setAlertUnit}>
-                  <SelectTrigger className="w-24 rounded-l-none border-l-0">
+                  <SelectTrigger className="w-24 rounded-l-none border-l-0 border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="border-[#91BDC8]">
                     <SelectItem value="mg/dL">mg/dL</SelectItem>
                     <SelectItem value="mmol/L">mmol/L</SelectItem>
                     <SelectItem value="mL/min">mL/min</SelectItem>
@@ -225,39 +228,40 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
             </div>
           </div>
           
-          <Alert className="bg-amber-50 text-amber-800 border-amber-200">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Condition d'alerte</AlertTitle>
+          <Alert className="bg-[#ECE7E3]/30 border-[#91BDC8] text-[#334349]">
+            <AlertCircle className="h-4 w-4 text-[#2980BA]" />
+            <AlertTitle className="text-[#021122]">Condition d'alerte</AlertTitle>
             <AlertDescription>
               Une alerte sera déclenchée si {testType} a une {alertParameter} {alertOperator} {alertThreshold} {alertUnit}
             </AlertDescription>
           </Alert>
         </div>
         
-        <Separator />
+        <Separator className="bg-[#91BDC8]/30" />
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium">Action urgente</h3>
+            <h3 className="text-lg font-medium text-[#021122]">Action urgente</h3>
             <div className="flex items-center space-x-2">
               <Switch
                 checked={scheduleAppointment}
                 onCheckedChange={setScheduleAppointment}
                 id="schedule-appointment"
+                className="data-[state=checked]:bg-[#2980BA]"
               />
-              <Label htmlFor="schedule-appointment">Planifier un rendez-vous</Label>
+              <Label htmlFor="schedule-appointment" className="text-[#334349]">Planifier un rendez-vous</Label>
             </div>
           </div>
           
           {scheduleAppointment && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="urgency-level">Niveau d'urgence</Label>
+                <Label htmlFor="urgency-level" className="text-[#334349]">Niveau d'urgence</Label>
                 <Select value={urgencyLevel} onValueChange={setUrgencyLevel}>
-                  <SelectTrigger id="urgency-level">
+                  <SelectTrigger id="urgency-level" className="border-[#91BDC8] focus:border-[#2980BA] focus-visible:ring-[#619DB5]">
                     <SelectValue placeholder="Sélectionner le niveau d'urgence" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="border-[#91BDC8]">
                     <SelectItem value="low">Basse</SelectItem>
                     <SelectItem value="medium">Moyenne</SelectItem>
                     <SelectItem value="high">Haute</SelectItem>
@@ -266,13 +270,14 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="appointment-message">Message pour le rendez-vous</Label>
+                <Label htmlFor="appointment-message" className="text-[#334349]">Message pour le rendez-vous</Label>
                 <Textarea
                   id="appointment-message"
                   value={appointmentMessage}
                   onChange={(e) => setAppointmentMessage(e.target.value)}
                   placeholder="Message expliquant la raison du rendez-vous urgent"
                   rows={2}
+                  className="border-[#91BDC8] focus-visible:ring-[#619DB5] focus:border-[#2980BA]"
                 />
               </div>
             </>
@@ -281,10 +286,18 @@ const SimplifiedWorkflowForm: React.FC<SimplifiedWorkflowFormProps> = ({
       </div>
       
       <div className="flex justify-end space-x-2 py-3 pt-4 bg-white mt-3">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={onCancel}
+          className="border-[#91BDC8] text-[#334349] hover:bg-[#ECE7E3]/20"
+        >
           Annuler
         </Button>
-        <Button type="submit">
+        <Button 
+          type="submit"
+          className="bg-[#2980BA] hover:bg-[#619DB5] text-[#FAFAFA]"
+        >
           Créer le workflow
         </Button>
       </div>
